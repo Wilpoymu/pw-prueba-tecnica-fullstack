@@ -140,9 +140,7 @@ const Dashboard = () => {
                 <ArrowDownRight className='h-4 w-4 text-red-600' />
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold text-red-600'>
-                  $2,889.00
-                </div>
+                <div className='text-2xl font-bold text-red-600'>$2,889.00</div>
                 <p className='text-xs text-muted-foreground'>
                   +4.3% desde el mes pasado
                 </p>
@@ -257,10 +255,9 @@ const Dashboard = () => {
             <Card className='border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-900'>
               <CardContent className='pt-6'>
                 <p className='text-sm text-blue-900 dark:text-blue-100'>
-                  <strong>Nota:</strong> Como usuario estándar, tienes acceso
-                  a la gestión de movimientos. Los administradores pueden
-                  acceder a funciones adicionales como gestión de usuarios y
-                  reportes.
+                  <strong>Nota:</strong> Como usuario estándar, tienes acceso a
+                  la gestión de movimientos. Los administradores pueden acceder
+                  a funciones adicionales como gestión de usuarios y reportes.
                 </p>
               </CardContent>
             </Card>
