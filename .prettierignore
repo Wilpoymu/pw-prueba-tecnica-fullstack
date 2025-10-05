@@ -1,4 +1,8 @@
 # Ignore artifacts:
 .env
 
- 
+# Lock files:
+pnpm-lock.yaml
+
+# Shadcn UI components
+/components/ui
