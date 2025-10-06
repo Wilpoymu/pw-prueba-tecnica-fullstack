@@ -1,18 +1,18 @@
 openapi: 3.0.0
 info:
-  title: FinanceFlow API
+  title: Flowly API
   version: 1.0.0
   description: |
     API REST para gestión de ingresos y egresos financieros. 
     Permite a los usuarios administrar sus movimientos financieros con autenticación y control de permisos basado en roles.
   contact:
-    name: FinanceFlow Support
-    email: support@financeflow.com
+    name: Flowly Support
+    email: wilferzuluagadev@gmail.com
 
 servers:
   - url: http://localhost:3000
     description: Servidor de desarrollo
-  - url: https://api.financeflow.com
+  - url: https://api.Flowly.com
     description: Servidor de producción
 
 tags:

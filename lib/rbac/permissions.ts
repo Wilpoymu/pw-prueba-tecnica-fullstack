@@ -22,7 +22,6 @@ export enum Permission {
   EXPORT_REPORTS = 'export_reports',
 }
 
-
 export const rolePermissions: Record<Role, Permission[]> = {
   [Role.USER]: [Permission.VIEW_DASHBOARD, Permission.VIEW_MOVEMENTS],
   [Role.ADMIN]: [

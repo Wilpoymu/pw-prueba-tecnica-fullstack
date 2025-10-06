@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  TrendingUp,
-  Users,
-  BarChart3,
-  Sparkles,
-  Menu,
-  X,
-} from 'lucide-react';
+import { TrendingUp, Users, BarChart3, Sparkles, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProtectedContent } from '@/components/auth/ProtectedContent';
 import { Permission } from '@/lib/rbac/permissions';
@@ -88,10 +81,12 @@ export const Sidebar = ({ className }: SidebarProps) => {
             />
             <div className='flex flex-col'>
               <span className='text-sm font-medium'>{item.title}</span>
-              <span className={cn(
-                'text-xs transition-colors',
-                isActive ? 'text-purple-100' : 'text-muted-foreground'
-              )}>
+              <span
+                className={cn(
+                  'text-xs transition-colors',
+                  isActive ? 'text-purple-100' : 'text-muted-foreground'
+                )}
+              >
                 {item.description}
               </span>
             </div>
@@ -141,14 +136,16 @@ export const Sidebar = ({ className }: SidebarProps) => {
       <aside
         className={cn(
           'fixed inset-y-0 left-0 z-40 w-72 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-purple-200/50 dark:border-purple-900/50 transform transition-transform duration-200 ease-in-out',
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          isMobileMenuOpen
+            ? 'translate-x-0'
+            : '-translate-x-full lg:translate-x-0',
           className
         )}
       >
         <div className='flex flex-col h-full relative'>
           {/* Gradient overlay */}
           <div className='absolute inset-0 bg-gradient-to-b from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none' />
-          
+
           {/* Logo */}
           <div className='relative p-6 border-b border-purple-200/50 dark:border-purple-900/50'>
             <Link
@@ -163,9 +160,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
                 </div>
               </div>
               <div className='flex flex-col'>
-                <span className='text-xl font-bold text-gradient'>
-                  FinanceFlow
-                </span>
+                <span className='text-xl font-bold text-gradient'>Flowly</span>
                 <span className='text-xs text-purple-600 dark:text-purple-400'>
                   Sistema de Gestión
                 </span>
@@ -187,7 +182,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
           <div className='relative p-4 border-t border-purple-200/50 dark:border-purple-900/50'>
             <div className='px-4 py-2 text-xs text-muted-foreground'>
               <p className='font-medium text-purple-600 dark:text-purple-400'>
-                &copy; 2025 FinanceFlow
+                &copy; 2025 Flowly
               </p>
               <p className='mt-1'>Sistema de Gestión Financiera</p>
             </div>

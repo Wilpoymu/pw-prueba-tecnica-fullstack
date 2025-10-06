@@ -4,7 +4,7 @@ describe('API Helpers', () => {
   describe('calculatePagination', () => {
     it('debería calcular correctamente la primera página', () => {
       const result = calculatePagination(1, 10, 100);
-      
+
       expect(result).toEqual({
         page: 1,
         limit: 10,
@@ -15,7 +15,7 @@ describe('API Helpers', () => {
 
     it('debería calcular correctamente una página intermedia', () => {
       const result = calculatePagination(5, 10, 100);
-      
+
       expect(result).toEqual({
         page: 5,
         limit: 10,
@@ -26,7 +26,7 @@ describe('API Helpers', () => {
 
     it('debería calcular correctamente la última página', () => {
       const result = calculatePagination(10, 10, 100);
-      
+
       expect(result).toEqual({
         page: 10,
         limit: 10,
@@ -36,8 +36,8 @@ describe('API Helpers', () => {
     });
 
     it('debería manejar casos con páginas incompletas', () => {
-      const result = calculatePagination(3, 25, 63); 
-      
+      const result = calculatePagination(3, 25, 63);
+
       expect(result).toEqual({
         page: 3,
         limit: 25,
@@ -48,7 +48,7 @@ describe('API Helpers', () => {
 
     it('debería manejar correctamente cuando no hay items', () => {
       const result = calculatePagination(1, 10, 0);
-      
+
       expect(result).toEqual({
         page: 1,
         limit: 10,
@@ -59,7 +59,7 @@ describe('API Helpers', () => {
 
     it('debería calcular correctamente con un solo item', () => {
       const result = calculatePagination(1, 10, 1);
-      
+
       expect(result).toEqual({
         page: 1,
         limit: 10,

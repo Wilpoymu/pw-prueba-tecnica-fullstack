@@ -138,12 +138,7 @@ async function handleGet(
 
     console.error('Error listing movements:', error);
     console.error('Error details:', JSON.stringify(error, null, 2));
-    return sendError(
-      res,
-      'Error al listar movimientos',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al listar movimientos', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -156,11 +151,17 @@ async function handlePost(
   res: NextApiResponse<ApiResponse>
 ) {
   try {
-    const session = await requirePermission(req, res, Permission.CREATE_MOVEMENT);
+    const session = await requirePermission(
+      req,
+      res,
+      Permission.CREATE_MOVEMENT
+    );
     if (!session) return;
 
-    const validatedData: CreateMovementInput = createMovementSchema.parse(req.body);
-    
+    const validatedData: CreateMovementInput = createMovementSchema.parse(
+      req.body
+    );
+
     const amountDecimal = validatedData.amount;
 
     const movement = await prisma.movement.create({
@@ -196,11 +197,6 @@ async function handlePost(
     }
 
     console.error('Error creating movement:', error);
-    return sendError(
-      res,
-      'Error al crear movimiento',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al crear movimiento', 'INTERNAL_ERROR', 500);
   }
 }

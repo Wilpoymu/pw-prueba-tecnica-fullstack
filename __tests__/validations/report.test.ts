@@ -1,5 +1,8 @@
 import { ZodError } from 'zod';
-import { reportQuerySchema, csvExportQuerySchema } from '@/lib/validations/report';
+import {
+  reportQuerySchema,
+  csvExportQuerySchema,
+} from '@/lib/validations/report';
 
 describe('Report Validations', () => {
   describe('reportQuerySchema', () => {
@@ -212,7 +215,9 @@ describe('Report Validations', () => {
         endDate: '2025-12-31T23:59:59.999Z',
       };
 
-      expect(csvExportQuerySchema.parse(startOnly).startDate).toBe(startOnly.startDate);
+      expect(csvExportQuerySchema.parse(startOnly).startDate).toBe(
+        startOnly.startDate
+      );
       expect(csvExportQuerySchema.parse(endOnly).endDate).toBe(endOnly.endDate);
     });
   });

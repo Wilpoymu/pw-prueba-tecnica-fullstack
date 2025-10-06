@@ -15,11 +15,18 @@ type ApiHandler = (
   res: NextApiResponse
 ) => Promise<void> | void;
 
-
 export const withAuth = (handler: ApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const session = await auth.api.getSession({ headers: req.headers });
+      // Convertir IncomingHttpHeaders a Headers para Better Auth
+      const headers = new Headers();
+      Object.entries(req.headers).forEach(([key, value]) => {
+        if (value) {
+          headers.set(key, Array.isArray(value) ? value[0] : value);
+        }
+      });
+
+      const session = await auth.api.getSession({ headers });
 
       if (!session?.user) {
         return res.status(401).json({ error: 'No autenticado' });
@@ -39,7 +46,6 @@ export const withAuth = (handler: ApiHandler) => {
     }
   };
 };
-
 
 export const withPermission = (permission: Permission, handler: ApiHandler) => {
   return withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {

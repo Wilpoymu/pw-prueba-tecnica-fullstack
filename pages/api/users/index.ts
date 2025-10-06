@@ -9,9 +9,7 @@ import {
   parseQueryParam,
   ApiResponse,
 } from '@/lib/api/helpers';
-import {
-  listUsersQuerySchema,
-} from '@/lib/validations/user';
+import { listUsersQuerySchema } from '@/lib/validations/user';
 import { Permission } from '@/lib/rbac/permissions';
 import prisma from '@/lib/prisma';
 
@@ -127,11 +125,6 @@ async function handleGet(
     }
 
     console.error('Error listing users:', error);
-    return sendError(
-      res,
-      'Error al listar usuarios',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al listar usuarios', 'INTERNAL_ERROR', 500);
   }
 }

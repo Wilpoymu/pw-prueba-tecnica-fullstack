@@ -32,9 +32,15 @@ const Home = () => {
     <div className='min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20 relative overflow-hidden'>
       {/* Animated background elements */}
       <div className='absolute top-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float' />
-      <div className='absolute top-1/4 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float' style={{ animationDelay: '2s' }} />
-      <div className='absolute bottom-0 left-1/3 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-float' style={{ animationDelay: '4s' }} />
-      
+      <div
+        className='absolute top-1/4 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float'
+        style={{ animationDelay: '2s' }}
+      />
+      <div
+        className='absolute bottom-0 left-1/3 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-float'
+        style={{ animationDelay: '4s' }}
+      />
+
       {/* Header */}
       <header className='relative z-10 container mx-auto px-4 py-6 flex justify-between items-center backdrop-blur-sm'>
         <Link href='/' className='flex items-center gap-3 group'>
@@ -44,9 +50,7 @@ const Home = () => {
               <Sparkles className='h-6 w-6 text-white' />
             </div>
           </div>
-          <span className='text-2xl font-bold text-gradient'>
-            FinanceFlow
-          </span>
+          <span className='text-2xl font-bold text-gradient'>Flowly</span>
         </Link>
         <div className='flex gap-3 items-center'>
           <ThemeToggle />
@@ -89,7 +93,10 @@ const Home = () => {
 
           <div className='flex flex-col sm:flex-row gap-4 justify-center pt-8'>
             <Link href='/auth/sign-up'>
-              <Button size='lg' className='text-lg px-8 py-6 h-14 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-xl shadow-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/60 transition-all duration-300 hover:scale-105'>
+              <Button
+                size='lg'
+                className='text-lg px-8 py-6 h-14 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-xl shadow-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/60 transition-all duration-300 hover:scale-105'
+              >
                 <Github className='mr-2 h-5 w-5' />
                 Comenzar gratis con GitHub
                 <ArrowRight className='ml-2 h-5 w-5' />
@@ -111,7 +118,8 @@ const Home = () => {
             Funcionalidades Principales
           </h2>
           <p className='text-muted-foreground text-xl max-w-2xl mx-auto'>
-            Todo lo que necesitas para controlar tus finanzas de manera profesional
+            Todo lo que necesitas para controlar tus finanzas de manera
+            profesional
           </p>
         </div>
 
@@ -184,16 +192,28 @@ const Home = () => {
                 </div>
                 <ul className='space-y-3 text-muted-foreground'>
                   <li className='flex items-start gap-3'>
-                    <span className='text-blue-600 dark:text-blue-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Acceso a gestión de movimientos</span>
+                    <span className='text-blue-600 dark:text-blue-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Acceso a gestión de movimientos
+                    </span>
                   </li>
                   <li className='flex items-start gap-3'>
-                    <span className='text-blue-600 dark:text-blue-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Visualización de ingresos y egresos</span>
+                    <span className='text-blue-600 dark:text-blue-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Visualización de ingresos y egresos
+                    </span>
                   </li>
                   <li className='flex items-start gap-3'>
-                    <span className='text-blue-600 dark:text-blue-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Interfaz intuitiva y moderna</span>
+                    <span className='text-blue-600 dark:text-blue-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Interfaz intuitiva y moderna
+                    </span>
                   </li>
                 </ul>
               </CardContent>
@@ -215,24 +235,44 @@ const Home = () => {
                 </div>
                 <ul className='space-y-3 text-muted-foreground'>
                   <li className='flex items-start gap-3'>
-                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Todos los permisos de usuario</span>
+                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Todos los permisos de usuario
+                    </span>
                   </li>
                   <li className='flex items-start gap-3'>
-                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Agregar y editar movimientos</span>
+                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Agregar y editar movimientos
+                    </span>
                   </li>
                   <li className='flex items-start gap-3'>
-                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Gestión completa de usuarios</span>
+                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Gestión completa de usuarios
+                    </span>
                   </li>
                   <li className='flex items-start gap-3'>
-                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Acceso a reportes y gráficos</span>
+                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Acceso a reportes y gráficos
+                    </span>
                   </li>
                   <li className='flex items-start gap-3'>
-                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>✓</span>
-                    <span className='text-base'>Exportación de datos en CSV</span>
+                    <span className='text-purple-600 dark:text-purple-400 font-bold text-lg mt-0.5'>
+                      ✓
+                    </span>
+                    <span className='text-base'>
+                      Exportación de datos en CSV
+                    </span>
                   </li>
                 </ul>
               </CardContent>
@@ -246,21 +286,21 @@ const Home = () => {
         <Card className='max-w-5xl mx-auto bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 border-0 relative overflow-hidden shadow-2xl'>
           <div className='absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl' />
           <div className='absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl' />
-          
+
           <CardContent className='relative pt-16 pb-16 text-center text-white space-y-8'>
             <div className='w-20 h-20 mx-auto bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6'>
               <Download className='h-10 w-10 text-white' />
             </div>
-            
+
             <h2 className='text-4xl md:text-5xl font-bold max-w-3xl mx-auto'>
               ¿Listo para transformar la gestión de tus finanzas?
             </h2>
-            
+
             <p className='text-xl text-purple-100 max-w-2xl mx-auto leading-relaxed'>
               Únete ahora y obtén acceso completo como administrador. Comienza a
               gestionar tus ingresos y egresos de forma profesional en minutos.
             </p>
-            
+
             <div className='flex flex-col sm:flex-row gap-4 justify-center pt-4'>
               <Link href='/auth/sign-up'>
                 <Button
@@ -300,14 +340,20 @@ const Home = () => {
             <div className='w-6 h-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center'>
               <Sparkles className='h-4 w-4 text-white' />
             </div>
-            <span className='font-semibold text-gradient'>FinanceFlow</span>
+            <span className='font-semibold text-gradient'>Flowly</span>
           </div>
-          <p>&copy; 2025 FinanceFlow. Sistema de Gestión Financiera.</p>
+          <p>&copy; 2025 Flowly. Sistema de Gestión Financiera.</p>
           <div className='flex gap-4 text-sm'>
-            <Link href='#' className='hover:text-purple-600 dark:hover:text-purple-400 transition-colors'>
+            <Link
+              href='#'
+              className='hover:text-purple-600 dark:hover:text-purple-400 transition-colors'
+            >
               Privacidad
             </Link>
-            <Link href='#' className='hover:text-purple-600 dark:hover:text-purple-400 transition-colors'>
+            <Link
+              href='#'
+              className='hover:text-purple-600 dark:hover:text-purple-400 transition-colors'
+            >
               Términos
             </Link>
           </div>

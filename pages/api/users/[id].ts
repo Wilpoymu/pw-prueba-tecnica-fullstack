@@ -7,10 +7,7 @@ import {
   methodNotAllowed,
   ApiResponse,
 } from '@/lib/api/helpers';
-import {
-  updateUserSchema,
-  UpdateUserInput,
-} from '@/lib/validations/user';
+import { updateUserSchema, UpdateUserInput } from '@/lib/validations/user';
 import { Permission } from '@/lib/rbac/permissions';
 import prisma from '@/lib/prisma';
 
@@ -75,23 +72,13 @@ async function handleGet(
     });
 
     if (!user) {
-      return sendError(
-        res,
-        'Usuario no encontrado',
-        'NOT_FOUND',
-        404
-      );
+      return sendError(res, 'Usuario no encontrado', 'NOT_FOUND', 404);
     }
 
     return sendSuccess(res, user);
   } catch (error) {
     console.error('Error getting user:', error);
-    return sendError(
-      res,
-      'Error al obtener usuario',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al obtener usuario', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -114,12 +101,7 @@ async function handlePut(
     });
 
     if (!existingUser) {
-      return sendError(
-        res,
-        'Usuario no encontrado',
-        'NOT_FOUND',
-        404
-      );
+      return sendError(res, 'Usuario no encontrado', 'NOT_FOUND', 404);
     }
     const validatedData: UpdateUserInput = updateUserSchema.parse(req.body);
 
@@ -166,11 +148,6 @@ async function handlePut(
     }
 
     console.error('Error updating user:', error);
-    return sendError(
-      res,
-      'Error al actualizar usuario',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al actualizar usuario', 'INTERNAL_ERROR', 500);
   }
 }
