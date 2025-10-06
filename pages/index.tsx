@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { authClient } from '@/lib/auth/client';
 import Link from 'next/link';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Home = () => {
   const { data: session } = authClient.useSession();
@@ -35,7 +36,8 @@ const Home = () => {
             FinanceFlow
           </span>
         </div>
-        <div className='flex gap-4'>
+        <div className='flex gap-4 items-center'>
+          <ThemeToggle />
           <Link href='/auth/sign-in'>
             <Button variant='ghost'>Iniciar sesión</Button>
           </Link>

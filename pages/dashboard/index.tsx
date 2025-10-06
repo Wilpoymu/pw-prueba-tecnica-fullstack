@@ -21,6 +21,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo } from 'react';
 import { Permission } from '@/lib/rbac/permissions';
 import { ProtectedContent } from '@/components/auth/ProtectedContent';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Dashboard = () => {
   const { data: sessionData, isPending } = authClient.useSession();
@@ -97,6 +98,7 @@ const Dashboard = () => {
                   </p>
                 </div>
               </div>
+              <ThemeToggle />
               <Button variant='ghost' size='icon' onClick={handleSignOut}>
                 <LogOut className='h-5 w-5' />
               </Button>
