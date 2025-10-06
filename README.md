@@ -522,7 +522,7 @@ Este proyecto fue desarrollado como prueba técnica para PrevalentWare.
 
 **Wilmar Poyato**
 - GitHub: [@Wilpoymu](https://github.com/Wilpoymu)
-- Email: wilmar@example.com _(actualizar con tu email)_
+- Email: [wilferzuluagadev@gmail.com](mailto:wilferzuluagadev@gmail.com)
 
 ---
 
