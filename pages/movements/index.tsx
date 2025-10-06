@@ -42,11 +42,13 @@ import {
   Trash2,
   Loader2,
   AlertCircle,
+  Users,
 } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePermissions } from "@/lib/rbac/usePermissions";
 import { Permission } from "@/lib/rbac/permissions";
+import { authClient } from "@/lib/auth/client";
 
 interface Movement {
   id: string;
@@ -75,9 +77,14 @@ interface MovementFormData {
 export default function MovimientosPage() {
   const router = useRouter();
   const { can } = usePermissions();
+  const { data: session } = authClient.useSession();
   const canCreate = can(Permission.CREATE_MOVEMENT);
   const canEdit = can(Permission.EDIT_MOVEMENT);
   const canDelete = can(Permission.DELETE_MOVEMENT);
+
+  // Obtener el rol del usuario
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session?.user as any)?.role as string | undefined;
 
   // Estado
   const [movements, setMovements] = useState<Movement[]>([]);
@@ -344,6 +351,22 @@ export default function MovimientosPage() {
             <p className="text-muted-foreground mt-2">
               Gestiona todos tus ingresos y egresos
             </p>
+            {userRole !== 'ADMIN' && (
+              <div className='flex items-center gap-2 mt-3'>
+                <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20">
+                  <Users className="h-3 w-3 mr-1" />
+                  Mostrando solo tus movimientos
+                </Badge>
+              </div>
+            )}
+            {userRole === 'ADMIN' && (
+              <div className='flex items-center gap-2 mt-3'>
+                <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/20">
+                  <Users className="h-3 w-3 mr-1" />
+                  Vista de administrador - Todos los movimientos
+                </Badge>
+              </div>
+            )}
           </div>
 
           {canCreate && (
