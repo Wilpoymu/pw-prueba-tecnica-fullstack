@@ -26,8 +26,19 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   }, [sessionData, isPending, router, isClient]);
 
   const handleSignOut = async () => {
-    await authClient.signOut();
-    router.push('/');
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push('/');
+          },
+        },
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Forzar redirect incluso si hay error
+      router.push('/');
+    }
   };
 
   if (!isClient) {
