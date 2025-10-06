@@ -39,11 +39,9 @@ async function handleGet(
   res: NextApiResponse<ApiResponse>
 ) {
   try {
-    // Require VIEW_USERS permission
     const session = await requirePermission(req, res, Permission.VIEW_USERS);
     if (!session) return;
 
-    // Parse and validate query parameters
     const queryParams = {
       page: parseQueryParam(req.query.page),
       limit: parseQueryParam(req.query.limit),
@@ -55,16 +53,13 @@ async function handleGet(
 
     const validatedQuery = listUsersQuerySchema.parse(queryParams);
 
-    // Build where clause
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
-    // Filter by role
     if (validatedQuery.role) {
       where.role = validatedQuery.role;
     }
 
-    // Search in name or email
     if (validatedQuery.search) {
       where.OR = [
         {
@@ -82,19 +77,15 @@ async function handleGet(
       ];
     }
 
-    // Calculate pagination
     const skip = (validatedQuery.page - 1) * validatedQuery.limit;
 
-    // Build order by
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orderBy: any = {
       [validatedQuery.sortBy]: validatedQuery.sortOrder,
     };
 
-    // Get total count
     const total = await prisma.user.count({ where });
 
-    // Get users
     const users = await prisma.user.findMany({
       where,
       select: {
@@ -117,7 +108,6 @@ async function handleGet(
       take: validatedQuery.limit,
     });
 
-    // Calculate pagination metadata
     const pagination = calculatePagination(
       validatedQuery.page,
       validatedQuery.limit,

@@ -2,7 +2,6 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import 'swagger-ui-react/swagger-ui.css';
 
-// Importar SwaggerUI dinámicamente solo en el cliente para evitar problemas con SSR
 const SwaggerUI = dynamic(() => import('swagger-ui-react'), { ssr: false });
 
 export default function ApiDocsPage() {

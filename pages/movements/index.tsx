@@ -82,11 +82,9 @@ export default function MovimientosPage() {
   const canEdit = can(Permission.EDIT_MOVEMENT);
   const canDelete = can(Permission.DELETE_MOVEMENT);
 
-  // Obtener el rol del usuario
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userRole = (session?.user as any)?.role as string | undefined;
 
-  // Estado
   const [movements, setMovements] = useState<Movement[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -98,7 +96,6 @@ export default function MovimientosPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState<string>("");
 
-  // Form data
   const [formData, setFormData] = useState<MovementFormData>({
     concept: "",
     amount: "",
@@ -106,11 +103,9 @@ export default function MovimientosPage() {
     date: new Date(),
   });
 
-  // Validar formulario
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Validar concepto
     if (!formData.concept.trim()) {
       newErrors.concept = "El concepto es requerido";
     } else if (formData.concept.trim().length < 3) {
@@ -119,7 +114,6 @@ export default function MovimientosPage() {
       newErrors.concept = "El concepto no puede exceder 255 caracteres";
     }
 
-    // Validar monto
     if (!formData.amount.trim()) {
       newErrors.amount = "El monto es requerido";
     } else {
@@ -133,7 +127,6 @@ export default function MovimientosPage() {
       }
     }
 
-    // Validar fecha
     if (!formData.date || isNaN(formData.date.getTime())) {
       newErrors.date = "La fecha es requerida";
     }
@@ -142,7 +135,6 @@ export default function MovimientosPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Validar campo individual en tiempo real (opcional, para mejor UX)
   const validateFieldOnChange = (field: string, value: any) => {
     const newErrors = { ...errors };
 
@@ -172,7 +164,6 @@ export default function MovimientosPage() {
     setErrors(newErrors);
   };
 
-  // Fetch movements
   const fetchMovements = async () => {
     try {
       setLoading(true);
@@ -198,12 +189,10 @@ export default function MovimientosPage() {
         setMovements(data.data);
       } else {
         console.error("Error fetching movements:", data.error);
-        // Mostrar error en consola pero no romper la UI
         setMovements([]);
       }
     } catch (error) {
       console.error("Error fetching movements:", error);
-      // En caso de error, mostrar array vacío pero no romper la UI
       setMovements([]);
     } finally {
       setLoading(false);
@@ -214,7 +203,6 @@ export default function MovimientosPage() {
     fetchMovements();
   }, [typeFilter, search]);
 
-  // Handlers
   const handleCreateNew = () => {
     setIsEditing(false);
     setCurrentMovement(null);
@@ -255,7 +243,6 @@ export default function MovimientosPage() {
 
       if (data.success) {
         fetchMovements();
-        // Opcional: mostrar mensaje de éxito (podrías usar un toast aquí)
       } else {
         alert(`Error al eliminar: ${data.error.message || "Error desconocido"}`);
       }
@@ -269,7 +256,6 @@ export default function MovimientosPage() {
     e.preventDefault();
     setApiError("");
 
-    // Validar formulario
     if (!validateForm()) {
       return;
     }
@@ -309,7 +295,6 @@ export default function MovimientosPage() {
         setErrors({});
         fetchMovements();
       } else {
-        // Manejar errores de validación del backend
         if (data.error.details && Array.isArray(data.error.details)) {
           const backendErrors: Record<string, string> = {};
           data.error.details.forEach((detail: any) => {
@@ -329,7 +314,6 @@ export default function MovimientosPage() {
     }
   };
 
-  // Calcular totales
   const filteredMovements = movements;
   const totalIncome = filteredMovements
     .filter((m) => m.type === "INCOME")

@@ -60,7 +60,6 @@ export function sendError(
  * Validate and get authenticated session
  */
 export async function getAuthenticatedSession(req: NextApiRequest) {
-  // Convert Node.js headers to Web API Headers
   const headers = new Headers();
   Object.entries(req.headers).forEach(([key, value]) => {
     if (value) {

@@ -61,7 +61,7 @@ export const listMovementsQuerySchema = z.object({
   endDate: z.string().datetime().optional(),
   sortBy: z.enum(['date', 'amount', 'createdAt']).default('date'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
-  search: z.string().optional(), // Para buscar en concept
+  search: z.string().optional(),
 });
 
 /**

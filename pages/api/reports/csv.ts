@@ -35,11 +35,9 @@ export default async function handler(
   }
 
   try {
-    // Require EXPORT_REPORTS permission (admin only)
     const session = await requirePermission(req, res, Permission.EXPORT_REPORTS);
     if (!session) return;
 
-    // Parse and validate query parameters
     const queryParams = {
       startDate: parseQueryParam(req.query.startDate),
       endDate: parseQueryParam(req.query.endDate),
@@ -50,13 +48,11 @@ export default async function handler(
 
     const validatedQuery: CsvExportQuery = csvExportQuerySchema.parse(queryParams);
 
-    // Build where clause
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       deletedAt: null,
     };
 
-    // Filter by date range
     if (validatedQuery.startDate || validatedQuery.endDate) {
       where.date = {};
       if (validatedQuery.startDate) {
@@ -67,16 +63,13 @@ export default async function handler(
       }
     }
 
-    // Filter by type
     if (validatedQuery.type) {
       where.type = validatedQuery.type;
     }
 
-    // Build order by
     const orderBy: any = {};
     orderBy[validatedQuery.sortBy || 'date'] = validatedQuery.sortOrder || 'desc';
 
-    // Get movements with user information
     const movements: MovementForCsv[] = await prisma.movement.findMany({
       where,
       select: {
@@ -96,15 +89,12 @@ export default async function handler(
       orderBy,
     }) as any;
 
-    // Generate CSV content
     const csv = generateCsv(movements);
 
-    // Set headers for file download
     const filename = `movimientos_${new Date().toISOString().split('T')[0]}.csv`;
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     
-    // Add BOM for Excel UTF-8 support
     res.write('\uFEFF');
     res.write(csv);
     res.end();
@@ -133,7 +123,6 @@ export default async function handler(
  * Generate CSV content from movements
  */
 function generateCsv(movements: MovementForCsv[]): string {
-  // CSV headers
   const headers = [
     'ID',
     'Fecha',
@@ -145,10 +134,8 @@ function generateCsv(movements: MovementForCsv[]): string {
     'Fecha de Creación',
   ];
 
-  // Convert headers to CSV row
   const csvHeaders = headers.map(escapeCSV).join(',');
 
-  // Convert movements to CSV rows
   const csvRows = movements.map((movement) => {
     const row = [
       movement.id,
@@ -164,7 +151,6 @@ function generateCsv(movements: MovementForCsv[]): string {
     return row.map(escapeCSV).join(',');
   });
 
-  // Combine headers and rows
   return [csvHeaders, ...csvRows].join('\n');
 }
 
@@ -178,7 +164,6 @@ function escapeCSV(field: string | number): string {
 
   const stringField = String(field);
 
-  // If field contains comma, quote, or newline, wrap in quotes and escape quotes
   if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
     return `"${stringField.replace(/"/g, '""')}"`;
   }

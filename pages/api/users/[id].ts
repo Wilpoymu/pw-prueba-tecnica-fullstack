@@ -50,11 +50,9 @@ async function handleGet(
   id: string
 ) {
   try {
-    // Require VIEW_USERS permission
     const session = await requirePermission(req, res, Permission.VIEW_USERS);
     if (!session) return;
 
-    // Find user
     const user = await prisma.user.findUnique({
       where: { id },
       select: {
@@ -108,11 +106,9 @@ async function handlePut(
   id: string
 ) {
   try {
-    // Require EDIT_USERS permission
     const session = await requirePermission(req, res, Permission.EDIT_USERS);
     if (!session) return;
 
-    // Check if user exists
     const existingUser = await prisma.user.findUnique({
       where: { id },
     });
@@ -125,11 +121,8 @@ async function handlePut(
         404
       );
     }
-
-    // Validate request body
     const validatedData: UpdateUserInput = updateUserSchema.parse(req.body);
 
-    // Build update data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = {};
 
@@ -145,7 +138,6 @@ async function handlePut(
       updateData.role = validatedData.role;
     }
 
-    // Update user
     const user = await prisma.user.update({
       where: { id },
       data: updateData,

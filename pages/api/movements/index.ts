@@ -46,11 +46,9 @@ async function handleGet(
   res: NextApiResponse<ApiResponse>
 ) {
   try {
-    // Require authentication
     const session = await requireAuth(req, res);
     if (!session) return;
 
-    // Parse and validate query parameters
     const queryParams = {
       page: parseQueryParam(req.query.page),
       limit: parseQueryParam(req.query.limit),
@@ -64,23 +62,19 @@ async function handleGet(
 
     const validatedQuery = listMovementsQuerySchema.parse(queryParams);
 
-    // Build where clause
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
-      deletedAt: null, // Only non-deleted movements
+      deletedAt: null,
     };
 
-    // Non-admin users can only see their own movements
     if (session.user.role !== 'ADMIN') {
       where.userId = session.user.id;
     }
 
-    // Filter by type
     if (validatedQuery.type) {
       where.type = validatedQuery.type;
     }
 
-    // Filter by date range
     if (validatedQuery.startDate || validatedQuery.endDate) {
       where.date = {};
       if (validatedQuery.startDate) {
@@ -91,7 +85,6 @@ async function handleGet(
       }
     }
 
-    // Search in concept
     if (validatedQuery.search) {
       where.concept = {
         contains: validatedQuery.search,
@@ -99,19 +92,15 @@ async function handleGet(
       };
     }
 
-    // Calculate pagination
     const skip = (validatedQuery.page - 1) * validatedQuery.limit;
 
-    // Build order by
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orderBy: any = {
       [validatedQuery.sortBy]: validatedQuery.sortOrder,
     };
 
-    // Get total count
     const total = await prisma.movement.count({ where });
 
-    // Get movements
     const movements = await prisma.movement.findMany({
       where,
       include: {
@@ -129,7 +118,6 @@ async function handleGet(
       take: validatedQuery.limit,
     });
 
-    // Calculate pagination metadata
     const pagination = calculatePagination(
       validatedQuery.page,
       validatedQuery.limit,
@@ -168,17 +156,13 @@ async function handlePost(
   res: NextApiResponse<ApiResponse>
 ) {
   try {
-    // Require admin permission
     const session = await requirePermission(req, res, Permission.CREATE_MOVEMENT);
     if (!session) return;
 
-    // Validate request body
     const validatedData: CreateMovementInput = createMovementSchema.parse(req.body);
-
-    // Convert amount to Decimal
+    
     const amountDecimal = validatedData.amount;
 
-    // Create movement
     const movement = await prisma.movement.create({
       data: {
         concept: validatedData.concept,
