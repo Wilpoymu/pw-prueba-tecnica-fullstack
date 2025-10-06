@@ -20,6 +20,8 @@ tags:
     description: Endpoints para gestión de ingresos y egresos
   - name: Users
     description: Endpoints para gestión de usuarios (solo administradores)
+  - name: Reports
+    description: Endpoints para reportes y exportación de datos (solo administradores)
 
 security:
   - CookieAuth: []
@@ -71,3 +73,7 @@ paths:
     $ref: './users.yml#/paths/~1api~1users'
   /api/users/{id}:
     $ref: './users.yml#/paths/~1api~1users~1{id}'
+  /api/reports/summary:
+    $ref: './reports.yml#/paths/~1api~1reports~1summary'
+  /api/reports/csv:
+    $ref: './reports.yml#/paths/~1api~1reports~1csv'
