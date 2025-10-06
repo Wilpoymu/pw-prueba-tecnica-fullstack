@@ -6,3 +6,6 @@ pnpm-lock.yaml
 
 # Shadcn UI components
 /components/ui
+
+# Migrations folder
+/prisma/migrations

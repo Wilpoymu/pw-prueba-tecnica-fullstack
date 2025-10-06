@@ -18,12 +18,28 @@ import {
 import Link from 'next/link';
 import { authClient } from '@/lib/auth/client';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { Permission } from '@/lib/rbac/permissions';
+import { ProtectedContent } from '@/components/auth/ProtectedContent';
 
 const Dashboard = () => {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: sessionData, isPending } = authClient.useSession();
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+
+  // Usar useMemo para evitar recrear el objeto en cada render
+  const session = useMemo(() => {
+    if (!sessionData) return null;
+    
+    return {
+      ...sessionData,
+      user: {
+        ...sessionData.user,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        role: (sessionData.user as any).role as string | undefined,
+      },
+    };
+  }, [sessionData]);
 
   useEffect(() => {
     setIsClient(true);
@@ -150,7 +166,6 @@ const Dashboard = () => {
 
           {/* Main Navigation Cards */}
           <div className='grid gap-6 md:grid-cols-3'>
-            {/* Sistema de gestión de ingresos y gastos */}
             <Link href='/movimientos'>
               <Card className='cursor-pointer hover:border-primary transition-colors h-full'>
                 <CardHeader>
@@ -183,8 +198,7 @@ const Dashboard = () => {
               </Card>
             </Link>
 
-            {/* Gestión de usuarios (solo admin) */}
-            {isAdmin && (
+            <ProtectedContent permission={Permission.VIEW_USERS}>
               <Link href='/usuarios'>
                 <Card className='cursor-pointer hover:border-primary transition-colors h-full'>
                   <CardHeader>
@@ -214,10 +228,9 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </Link>
-            )}
+            </ProtectedContent>
 
-            {/* Reportes (solo admin) */}
-            {isAdmin && (
+            <ProtectedContent permission={Permission.VIEW_REPORTS}>
               <Link href='/reportes'>
                 <Card className='cursor-pointer hover:border-primary transition-colors h-full'>
                   <CardHeader>
@@ -247,21 +260,26 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </Link>
-            )}
+            </ProtectedContent>
           </div>
 
-          {/* Info for non-admin users */}
-          {!isAdmin && (
-            <Card className='border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-900'>
-              <CardContent className='pt-6'>
-                <p className='text-sm text-blue-900 dark:text-blue-100'>
-                  <strong>Nota:</strong> Como usuario estándar, tienes acceso a
-                  la gestión de movimientos. Los administradores pueden acceder
-                  a funciones adicionales como gestión de usuarios y reportes.
-                </p>
-              </CardContent>
-            </Card>
-          )}
+          <ProtectedContent 
+            permission={Permission.VIEW_USERS}
+            fallback={
+              <Card className='border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-900'>
+                <CardContent className='pt-6'>
+                  <p className='text-sm text-blue-900 dark:text-blue-100'>
+                    <strong>Nota:</strong> Como usuario estándar, tienes acceso
+                    a la gestión de movimientos. Los administradores pueden
+                    acceder a funciones adicionales como gestión de usuarios y
+                    reportes.
+                  </p>
+                </CardContent>
+              </Card>
+            }
+          >
+            <></>
+          </ProtectedContent>
         </div>
       </main>
     </div>

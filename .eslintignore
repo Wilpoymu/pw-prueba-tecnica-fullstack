@@ -12,3 +12,5 @@ components/AtomicDesign/Atoms/Shadcn/*
 jest.config.ts
 
 __mocks__
+
+prisma/migrations/**/**
