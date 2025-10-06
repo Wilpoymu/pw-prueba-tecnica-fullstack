@@ -13,6 +13,7 @@ export type ExtendedUser = {
   emailVerified: boolean;
   name: string;
   image?: string | null;
+  phone?: string | null;
   role: string;
   createdAt: Date;
   updatedAt: Date;
