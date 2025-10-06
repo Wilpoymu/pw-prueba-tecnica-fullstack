@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -14,20 +12,10 @@ import {
   Lock,
   Download,
 } from 'lucide-react';
-import { authClient } from '@/lib/auth/client';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Home = () => {
-  const { data: session } = authClient.useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (session) {
-      router.push('/dashboard');
-    }
-  }, [session, router]);
-
   return (
     <div className='min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20 relative overflow-hidden'>
       {/* Animated background elements */}
