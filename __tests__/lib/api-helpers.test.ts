@@ -36,7 +36,7 @@ describe('API Helpers', () => {
     });
 
     it('debería manejar casos con páginas incompletas', () => {
-      const result = calculatePagination(3, 25, 63); // 63 items, 25 per page = 3 pages
+      const result = calculatePagination(3, 25, 63); 
       
       expect(result).toEqual({
         page: 3,

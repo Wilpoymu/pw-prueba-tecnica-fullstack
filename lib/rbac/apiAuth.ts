@@ -15,7 +15,7 @@ type ApiHandler = (
   res: NextApiResponse
 ) => Promise<void> | void;
 
-// Middleware para verificar autenticación
+
 export const withAuth = (handler: ApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -40,7 +40,7 @@ export const withAuth = (handler: ApiHandler) => {
   };
 };
 
-// Middleware para verificar permisos
+
 export const withPermission = (permission: Permission, handler: ApiHandler) => {
   return withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
     const userRole = req.user?.role;
@@ -55,7 +55,6 @@ export const withPermission = (permission: Permission, handler: ApiHandler) => {
   });
 };
 
-// Middleware para verificar múltiples permisos (OR)
 export const withAnyPermission = (
   permissions: Permission[],
   handler: ApiHandler
@@ -77,7 +76,6 @@ export const withAnyPermission = (
   });
 };
 
-// Middleware para verificar múltiples permisos (AND)
 export const withAllPermissions = (
   permissions: Permission[],
   handler: ApiHandler

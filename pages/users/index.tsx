@@ -71,14 +71,12 @@ export default function UsersPage() {
   const canView = can(Permission.VIEW_USERS);
   const canEdit = can(Permission.EDIT_USERS);
 
-  // Redirect si no tiene permisos
   useEffect(() => {
     if (!canView) {
       router.push("/dashboard");
     }
   }, [canView, router]);
 
-  // Estado
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -89,18 +87,15 @@ export default function UsersPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState<string>("");
 
-  // Form data
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     phone: "",
     role: "USER",
   });
 
-  // Validar formulario
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Validar nombre
     if (!formData.name.trim()) {
       newErrors.name = "El nombre es requerido";
     } else if (formData.name.trim().length < 1) {
@@ -120,7 +115,6 @@ export default function UsersPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Validar campo individual en tiempo real
   const validateFieldOnChange = (field: string, value: any) => {
     const newErrors = { ...errors };
 
@@ -141,7 +135,6 @@ export default function UsersPage() {
     setErrors(newErrors);
   };
 
-  // Fetch users
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -183,7 +176,6 @@ export default function UsersPage() {
     }
   }, [roleFilter, search, canView]);
 
-  // Handlers
   const handleEdit = (user: User) => {
     setCurrentUser(user);
     setFormData({
@@ -212,7 +204,6 @@ export default function UsersPage() {
         role: formData.role,
       };
 
-      // Solo incluir phone si tiene valor
       if (formData.phone && formData.phone.trim()) {
         payload.phone = formData.phone.trim();
       }
@@ -256,12 +247,10 @@ export default function UsersPage() {
     }
   };
 
-  // Calcular estadísticas
   const totalUsers = users.length;
   const totalAdmins = users.filter((u) => u.role === "ADMIN").length;
   const totalRegularUsers = users.filter((u) => u.role === "USER").length;
 
-  // Si no tiene permisos, no mostrar nada (el useEffect redirigirá)
   if (!canView) {
     return null;
   }

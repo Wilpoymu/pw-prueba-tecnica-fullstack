@@ -46,11 +46,9 @@ export default async function handler(
   }
 
   try {
-    // Require VIEW_REPORTS permission (admin only)
     const session = await requirePermission(req, res, Permission.VIEW_REPORTS);
     if (!session) return;
 
-    // Parse and validate query parameters
     const queryParams = {
       startDate: parseQueryParam(req.query.startDate),
       endDate: parseQueryParam(req.query.endDate),
@@ -60,13 +58,11 @@ export default async function handler(
 
     const validatedQuery: ReportQuery = reportQuerySchema.parse(queryParams);
 
-    // Build where clause
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       deletedAt: null,
     };
 
-    // Filter by date range
     if (validatedQuery.startDate || validatedQuery.endDate) {
       where.date = {};
       if (validatedQuery.startDate) {
@@ -77,12 +73,10 @@ export default async function handler(
       }
     }
 
-    // Filter by type
     if (validatedQuery.type) {
       where.type = validatedQuery.type;
     }
 
-    // Get all movements matching criteria
     const movements = await prisma.movement.findMany({
       where,
       select: {
@@ -97,7 +91,6 @@ export default async function handler(
       },
     });
 
-    // Calculate totals
     const totalIncome = movements
       .filter((m) => m.type === 'INCOME')
       .reduce((sum, m) => sum + Number(m.amount), 0);
@@ -108,13 +101,11 @@ export default async function handler(
 
     const currentBalance = totalIncome - totalExpense;
 
-    // Group movements by period
     const groupedData = groupMovementsByPeriod(
       movements,
       validatedQuery.groupBy || 'month'
     );
 
-    // Prepare summary data
     const summaryData: SummaryData = {
       totalIncome,
       totalExpense,

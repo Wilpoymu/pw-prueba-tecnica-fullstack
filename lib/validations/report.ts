@@ -11,7 +11,6 @@ export const reportQuerySchema = z.object({
   groupBy: z.enum(['day', 'week', 'month', 'year']).optional().default('month'),
 }).refine(
   (data) => {
-    // Si ambas fechas están presentes, startDate debe ser menor o igual a endDate
     if (data.startDate && data.endDate) {
       return new Date(data.startDate) <= new Date(data.endDate);
     }

@@ -22,7 +22,7 @@ describe('Movement Validations', () => {
 
     it('debería rechazar un concepto muy corto', () => {
       const invalidMovement = {
-        concept: 'Ab', // Menos de 3 caracteres
+        concept: 'Ab',
         amount: 5000,
         type: 'INCOME' as const,
       };
@@ -63,7 +63,7 @@ describe('Movement Validations', () => {
   describe('updateMovementSchema', () => {
     it('debería permitir actualizaciones parciales', () => {
       const partialUpdate = {
-        amount: 6000, // Solo actualizar el monto
+        amount: 6000, 
       };
 
       const result = updateMovementSchema.safeParse(partialUpdate);
@@ -72,7 +72,7 @@ describe('Movement Validations', () => {
 
     it('debería validar el concepto si se proporciona', () => {
       const updateWithShortConcept = {
-        concept: 'AB', // Muy corto
+        concept: 'AB',
       };
 
       const result = updateMovementSchema.safeParse(updateWithShortConcept);
@@ -127,7 +127,7 @@ describe('Movement Validations', () => {
 
     it('debería rechazar valores inválidos', () => {
       expect(MovementTypeEnum.safeParse('INVALID').success).toBe(false);
-      expect(MovementTypeEnum.safeParse('income').success).toBe(false); // Case sensitive
+      expect(MovementTypeEnum.safeParse('income').success).toBe(false);
     });
   });
 });

@@ -21,7 +21,7 @@ describe('Report Validations', () => {
 
       const result = reportQuerySchema.parse(query);
 
-      expect(result.groupBy).toBe('month'); // default value
+      expect(result.groupBy).toBe('month');
     });
 
     it('should accept only startDate', () => {
@@ -138,8 +138,8 @@ describe('Report Validations', () => {
 
       const result = csvExportQuerySchema.parse(query);
 
-      expect(result.sortBy).toBe('date'); // default value
-      expect(result.sortOrder).toBe('desc'); // default value
+      expect(result.sortBy).toBe('date');
+      expect(result.sortOrder).toBe('desc');
     });
 
     it('should accept valid sortBy values', () => {

@@ -55,16 +55,13 @@ async function handleGet(
   id: string
 ) {
   try {
-    // Require authentication
     const session = await requireAuth(req, res);
     if (!session) return;
 
-    // Find movement
     const movement = await prisma.movement.findFirst({
       where: {
         id,
         deletedAt: null,
-        // Non-admin users can only see their own movements
         ...(session.user.role !== 'ADMIN' && { userId: session.user.id }),
       },
       include: {
@@ -110,11 +107,9 @@ async function handlePut(
   id: string
 ) {
   try {
-    // Require admin permission
     const session = await requirePermission(req, res, Permission.EDIT_MOVEMENT);
     if (!session) return;
 
-    // Check if movement exists
     const existingMovement = await prisma.movement.findFirst({
       where: {
         id,
@@ -131,10 +126,7 @@ async function handlePut(
       );
     }
 
-    // Validate request body
     const validatedData: UpdateMovementInput = updateMovementSchema.parse(req.body);
-
-    // Build update data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = {};
 
@@ -154,7 +146,6 @@ async function handlePut(
       updateData.date = new Date(validatedData.date);
     }
 
-    // Update movement
     const movement = await prisma.movement.update({
       where: { id },
       data: updateData,
@@ -202,11 +193,9 @@ async function handleDelete(
   id: string
 ) {
   try {
-    // Require admin permission
     const session = await requirePermission(req, res, Permission.DELETE_MOVEMENT);
     if (!session) return;
 
-    // Check if movement exists
     const existingMovement = await prisma.movement.findFirst({
       where: {
         id,
@@ -223,7 +212,6 @@ async function handleDelete(
       );
     }
 
-    // Soft delete (mark as deleted)
     const movement = await prisma.movement.update({
       where: { id },
       data: {

@@ -46,7 +46,6 @@ const Dashboard = () => {
   const [movements, setMovements] = useState<Movement[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Usar useMemo para evitar recrear el objeto en cada render
   const session = useMemo(() => {
     if (!sessionData) return null;
 
@@ -60,7 +59,6 @@ const Dashboard = () => {
     };
   }, [sessionData]);
 
-  // Fetch movements data
   useEffect(() => {
     const fetchMovements = async () => {
       try {
@@ -69,14 +67,12 @@ const Dashboard = () => {
         let page = 1;
         let hasMore = true;
 
-        // Fetch all pages
         while (hasMore) {
           const response = await fetch(`/api/movements?page=${page}&limit=100&sortBy=date&sortOrder=desc`);
           const data = await response.json();
 
           if (data.success && data.data.length > 0) {
             allMovements.push(...data.data);
-            // Check if there are more pages
             hasMore = data.pagination && page < data.pagination.totalPages;
             page++;
           } else {
@@ -101,26 +97,22 @@ const Dashboard = () => {
 
   const isAdmin = session.user.role === 'ADMIN';
 
-  // Calcular métricas reales desde los movimientos
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
   const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
   const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
-  // Movimientos del mes actual
   const currentMonthMovements = movements.filter(m => {
     const date = new Date(m.date);
     return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
   });
 
-  // Movimientos del mes pasado
   const lastMonthMovements = movements.filter(m => {
     const date = new Date(m.date);
     return date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear;
   });
 
-  // Calcular totales del mes actual
   const ingresosDelMes = currentMonthMovements
     .filter(m => m.type === 'INCOME')
     .reduce((sum, m) => sum + Number(m.amount), 0);
@@ -129,7 +121,6 @@ const Dashboard = () => {
     .filter(m => m.type === 'EXPENSE')
     .reduce((sum, m) => sum + Number(m.amount), 0);
 
-  // Calcular totales del mes pasado
   const ingresosDelMesPasado = lastMonthMovements
     .filter(m => m.type === 'INCOME')
     .reduce((sum, m) => sum + Number(m.amount), 0);
@@ -138,7 +129,6 @@ const Dashboard = () => {
     .filter(m => m.type === 'EXPENSE')
     .reduce((sum, m) => sum + Number(m.amount), 0);
 
-  // Saldo total (todos los ingresos - todos los egresos)
   const totalIngresos = movements
     .filter(m => m.type === 'INCOME')
     .reduce((sum, m) => sum + Number(m.amount), 0);
@@ -149,12 +139,9 @@ const Dashboard = () => {
 
   const saldoTotal = totalIngresos - totalEgresos;
   
-  // Balance neto de cada mes
   const balanceMesActual = ingresosDelMes - egresosDelMes;
   const balanceMesPasado = ingresosDelMesPasado - egresosDelMesPasado;
 
-  // Calcular cambios porcentuales
-  // Para el saldo total: comparar el balance del mes actual vs mes pasado
   const cambioSaldo = balanceMesPasado !== 0 
     ? ((balanceMesActual - balanceMesPasado) / Math.abs(balanceMesPasado)) * 100 
     : (balanceMesActual > 0 ? 100 : 0);
@@ -167,12 +154,10 @@ const Dashboard = () => {
     ? ((egresosDelMes - egresosDelMesPasado) / egresosDelMesPasado) * 100
     : (egresosDelMes > 0 ? 100 : 0);
 
-  // Tasa de ahorro
   const tasaAhorro = ingresosDelMes !== 0 
     ? ((ingresosDelMes - egresosDelMes) / ingresosDelMes) * 100 
     : 0;
 
-  // Calcular estado financiero
   const getEstadoFinanciero = () => {
     const ratio = ingresosDelMes / egresosDelMes;
     if (ratio >= 5) return { label: 'Excelente', color: 'bg-gradient-to-r from-green-500 to-emerald-600', icon: CheckCircle2, textColor: 'text-green-700 dark:text-green-300' };

@@ -1,9 +1,8 @@
 import { z } from 'zod';
 
 /**
- * Schema para listar usuarios con paginación y filtros
+ * Schema for listing users with pagination, filtering, and sorting
  */
-// Schema for validating query parameters when listing users
 export const listUsersQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
   limit: z.coerce.number().int().min(1).max(100).optional().default(10),
@@ -14,8 +13,8 @@ export const listUsersQuerySchema = z.object({
 });
 
 /**
- * Schema para actualizar un usuario
- * Solo permite actualizar nombre, teléfono y rol
+ * Schema for updating user information
+ * only name, phone, and role can be updated
  */
 export const updateUserSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(255, 'El nombre es demasiado largo').optional(),
