@@ -6,12 +6,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
   TrendingUp,
   Users,
   BarChart3,
   ArrowUpRight,
   ArrowDownRight,
+  Wallet,
+  TrendingDown,
+  AlertCircle,
+  CheckCircle2,
+  Activity,
+  Calendar,
+  PiggyBank,
 } from 'lucide-react';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth/client';
@@ -41,19 +50,64 @@ const Dashboard = () => {
 
   const isAdmin = session.user.role === 'ADMIN';
 
+  // Datos mockeados para las métricas (más adelante vendrán de la API)
+  const saldoTotal = 12345.0;
+  const ingresosDelMes = 15234.0;
+  const egresosDelMes = 2889.0;
+  const tasaAhorro = ((ingresosDelMes - egresosDelMes) / ingresosDelMes) * 100;
+  const cambioSaldo = 20.1;
+  const cambioIngresos = 12.5;
+  const cambioEgresos = 4.3;
+
+  // Calcular estado financiero
+  const getEstadoFinanciero = () => {
+    const ratio = ingresosDelMes / egresosDelMes;
+    if (ratio >= 5) return { label: 'Excelente', color: 'bg-gradient-to-r from-green-500 to-emerald-600', icon: CheckCircle2, textColor: 'text-green-700 dark:text-green-300' };
+    if (ratio >= 3) return { label: 'Saludable', color: 'bg-gradient-to-r from-blue-500 to-cyan-600', icon: TrendingUp, textColor: 'text-blue-700 dark:text-blue-300' };
+    if (ratio >= 2) return { label: 'Estable', color: 'bg-gradient-to-r from-purple-500 to-purple-600', icon: Activity, textColor: 'text-purple-700 dark:text-purple-300' };
+    if (ratio >= 1.5) return { label: 'Precaución', color: 'bg-gradient-to-r from-yellow-500 to-orange-600', icon: AlertCircle, textColor: 'text-yellow-700 dark:text-yellow-300' };
+    return { label: 'Atención', color: 'bg-gradient-to-r from-red-500 to-pink-600', icon: AlertCircle, textColor: 'text-red-700 dark:text-red-300' };
+  };
+
+  const estadoFinanciero = getEstadoFinanciero();
+  const EstadoIcon = estadoFinanciero.icon;
+
   return (
     <DashboardLayout>
       <div className='space-y-8'>
         {/* Welcome Section */}
         <div className='relative'>
           <div className='absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl blur-3xl' />
-          <div className='relative'>
-            <h1 className='text-4xl font-bold text-gradient'>
-              Bienvenido, {session.user.name}
-            </h1>
-            <p className='text-muted-foreground mt-2 text-lg'>
-              ¿Qué te gustaría hacer hoy?
-            </p>
+          <div className='relative flex items-start justify-between flex-wrap gap-4'>
+            <div>
+              <h1 className='text-4xl font-bold text-gradient'>
+                Bienvenido, {session.user.name}
+              </h1>
+              <p className='text-muted-foreground mt-2 text-lg'>
+                ¿Qué te gustaría hacer hoy?
+              </p>
+            </div>
+            <div className='glass px-6 py-4 rounded-2xl border border-purple-500/20 space-y-2'>
+              <div className='flex items-center gap-2'>
+                <EstadoIcon className={`h-5 w-5 ${estadoFinanciero.textColor}`} />
+                <span className='text-sm font-medium text-muted-foreground'>Estado Financiero</span>
+              </div>
+              <div className='flex items-center gap-3'>
+                <Badge className={`${estadoFinanciero.color} text-white border-0 px-4 py-1.5 text-base font-semibold shadow-lg`}>
+                  {estadoFinanciero.label}
+                </Badge>
+                <Separator orientation='vertical' className='h-6' />
+                <div className='text-sm'>
+                  <div className='flex items-center gap-1.5'>
+                    <PiggyBank className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      {tasaAhorro.toFixed(1)}%
+                    </span>
+                    <span className='text-muted-foreground text-xs'>ahorro</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -71,11 +125,16 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className='relative'>
               <div className='text-3xl font-bold bg-gradient-to-br from-purple-600 to-blue-600 bg-clip-text text-transparent'>
-                $12,345.00
+                ${saldoTotal.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <p className='text-xs text-muted-foreground mt-1'>
-                +20.1% desde el mes pasado
-              </p>
+              <div className='flex items-center gap-2 mt-2'>
+                <Badge variant='outline' className='text-xs border-purple-500/30 text-purple-600 dark:text-purple-400'>
+                  {cambioSaldo > 0 ? '+' : ''}{cambioSaldo}%
+                </Badge>
+                <p className='text-xs text-muted-foreground'>
+                  vs mes pasado
+                </p>
+              </div>
             </CardContent>
           </Card>
 
@@ -89,11 +148,16 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className='relative'>
               <div className='text-3xl font-bold text-blue-600 dark:text-blue-400'>
-                $15,234.00
+                ${ingresosDelMes.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <p className='text-xs text-muted-foreground mt-1'>
-                +12.5% desde el mes pasado
-              </p>
+              <div className='flex items-center gap-2 mt-2'>
+                <Badge variant='outline' className='text-xs border-blue-500/30 text-blue-600 dark:text-blue-400'>
+                  {cambioIngresos > 0 ? '+' : ''}{cambioIngresos}%
+                </Badge>
+                <p className='text-xs text-muted-foreground'>
+                  vs mes pasado
+                </p>
+              </div>
             </CardContent>
           </Card>
 
@@ -107,14 +171,83 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className='relative'>
               <div className='text-3xl font-bold text-pink-600 dark:text-pink-400'>
-                $2,889.00
+                ${egresosDelMes.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
-              <p className='text-xs text-muted-foreground mt-1'>
-                +4.3% desde el mes pasado
-              </p>
+              <div className='flex items-center gap-2 mt-2'>
+                <Badge variant='outline' className='text-xs border-pink-500/30 text-pink-600 dark:text-pink-400'>
+                  {cambioEgresos > 0 ? '+' : ''}{cambioEgresos}%
+                </Badge>
+                <p className='text-xs text-muted-foreground'>
+                  vs mes pasado
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Financial Insights */}
+        <Card className='glass border-purple-500/20'>
+          <CardHeader>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center gap-2'>
+                <Activity className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                <CardTitle>Resumen del Mes</CardTitle>
+              </div>
+              <Badge variant='outline' className='text-xs'>
+                <Calendar className='h-3 w-3 mr-1' />
+                Octubre 2025
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className='grid gap-4 md:grid-cols-3'>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <div className='p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg'>
+                    <Wallet className='h-4 w-4 text-white' />
+                  </div>
+                  <span className='text-sm font-medium text-muted-foreground'>Balance Neto</span>
+                </div>
+                <p className='text-2xl font-bold text-gradient'>
+                  ${(ingresosDelMes - egresosDelMes).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                </p>
+                <p className='text-xs text-muted-foreground'>
+                  Diferencia entre ingresos y egresos
+                </p>
+              </div>
+
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <div className='p-2 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg'>
+                    <TrendingUp className='h-4 w-4 text-white' />
+                  </div>
+                  <span className='text-sm font-medium text-muted-foreground'>Ratio Ingreso/Egreso</span>
+                </div>
+                <p className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
+                  {(ingresosDelMes / egresosDelMes).toFixed(2)}x
+                </p>
+                <p className='text-xs text-muted-foreground'>
+                  {ingresosDelMes / egresosDelMes >= 3 ? 'Muy saludable' : ingresosDelMes / egresosDelMes >= 2 ? 'Saludable' : 'Puede mejorar'}
+                </p>
+              </div>
+
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <div className='p-2 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg'>
+                    <PiggyBank className='h-4 w-4 text-white' />
+                  </div>
+                  <span className='text-sm font-medium text-muted-foreground'>Capacidad de Ahorro</span>
+                </div>
+                <p className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
+                  {tasaAhorro.toFixed(1)}%
+                </p>
+                <p className='text-xs text-muted-foreground'>
+                  {tasaAhorro >= 50 ? '¡Excelente!' : tasaAhorro >= 30 ? 'Muy bien' : tasaAhorro >= 20 ? 'Bien' : 'Puede mejorar'}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Main Navigation Cards */}
         <div className='grid gap-6 md:grid-cols-3'>
