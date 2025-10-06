@@ -12,7 +12,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Servidor de desarrollo
-  - url: https://api.Flowly.com
+  - url: https://pw-prueba-tecnica-fullstack.vercel.app/
     description: Servidor de producción
 
 tags:

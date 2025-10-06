@@ -4,9 +4,9 @@ Sistema completo de gestión de ingresos y egresos con control de usuarios basad
 
 ## 🚀 Demo en Vivo
 
-**URL de Producción:** [https://tu-app.vercel.app](https://tu-app.vercel.app) _(Actualizar después del deployment)_
+**URL de Producción:** [https://pw-prueba-tecnica-fullstack.vercel.app](https://pw-prueba-tecnica-fullstack.vercel.app)
 
-**Documentación API:** [https://tu-app.vercel.app/docs](https://tu-app.vercel.app/docs)
+**Documentación API:** [https://pw-prueba-tecnica-fullstack.vercel.app/docs](https://pw-prueba-tecnica-fullstack.vercel.app/docs)
 
 ---
 
