@@ -41,8 +41,10 @@ import {
   Pencil,
   Trash2,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { DatePicker } from "@/components/ui/date-picker";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePermissions } from "@/lib/rbac/usePermissions";
 import { Permission } from "@/lib/rbac/permissions";
 
@@ -86,6 +88,8 @@ export default function MovimientosPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentMovement, setCurrentMovement] = useState<Movement | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [apiError, setApiError] = useState<string>("");
 
   // Form data
   const [formData, setFormData] = useState<MovementFormData>({
@@ -94,6 +98,72 @@ export default function MovimientosPage() {
     type: "INCOME",
     date: new Date(),
   });
+
+  // Validar formulario
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    // Validar concepto
+    if (!formData.concept.trim()) {
+      newErrors.concept = "El concepto es requerido";
+    } else if (formData.concept.trim().length < 3) {
+      newErrors.concept = "El concepto debe tener al menos 3 caracteres";
+    } else if (formData.concept.trim().length > 255) {
+      newErrors.concept = "El concepto no puede exceder 255 caracteres";
+    }
+
+    // Validar monto
+    if (!formData.amount.trim()) {
+      newErrors.amount = "El monto es requerido";
+    } else {
+      const amount = parseFloat(formData.amount);
+      if (isNaN(amount)) {
+        newErrors.amount = "El monto debe ser un número válido";
+      } else if (amount <= 0) {
+        newErrors.amount = "El monto debe ser mayor a 0";
+      } else if (amount > 999999999999.99) {
+        newErrors.amount = "El monto es demasiado grande";
+      }
+    }
+
+    // Validar fecha
+    if (!formData.date || isNaN(formData.date.getTime())) {
+      newErrors.date = "La fecha es requerida";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Validar campo individual en tiempo real (opcional, para mejor UX)
+  const validateFieldOnChange = (field: string, value: any) => {
+    const newErrors = { ...errors };
+
+    switch (field) {
+      case "concept":
+        if (value.trim() && value.trim().length >= 3 && value.trim().length <= 255) {
+          delete newErrors.concept;
+        }
+        break;
+
+      case "amount":
+        if (value.trim()) {
+          const amount = parseFloat(value);
+          if (!isNaN(amount) && amount > 0 && amount <= 999999999999.99) {
+            delete newErrors.amount;
+          }
+        }
+        break;
+
+      case "date":
+        if (value && !isNaN(value.getTime())) {
+          delete newErrors.date;
+        }
+        break;
+    }
+
+    setErrors(newErrors);
+  };
 
   // Fetch movements
   const fetchMovements = async () => {
@@ -121,9 +191,13 @@ export default function MovimientosPage() {
         setMovements(data.data);
       } else {
         console.error("Error fetching movements:", data.error);
+        // Mostrar error en consola pero no romper la UI
+        setMovements([]);
       }
     } catch (error) {
       console.error("Error fetching movements:", error);
+      // En caso de error, mostrar array vacío pero no romper la UI
+      setMovements([]);
     } finally {
       setLoading(false);
     }
@@ -143,6 +217,8 @@ export default function MovimientosPage() {
       type: "INCOME",
       date: new Date(),
     });
+    setErrors({});
+    setApiError("");
     setIsDialogOpen(true);
   };
 
@@ -155,11 +231,13 @@ export default function MovimientosPage() {
       type: movement.type,
       date: new Date(movement.date),
     });
+    setErrors({});
+    setApiError("");
     setIsDialogOpen(true);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estás seguro de eliminar este movimiento?")) return;
+    if (!confirm("¿Estás seguro de eliminar este movimiento? Esta acción no se puede deshacer.")) return;
 
     try {
       const response = await fetch(`/api/movements/${id}`, {
@@ -170,17 +248,25 @@ export default function MovimientosPage() {
 
       if (data.success) {
         fetchMovements();
+        // Opcional: mostrar mensaje de éxito (podrías usar un toast aquí)
       } else {
-        alert("Error al eliminar: " + data.error.message);
+        alert(`Error al eliminar: ${data.error.message || "Error desconocido"}`);
       }
     } catch (error) {
       console.error("Error deleting movement:", error);
-      alert("Error al eliminar el movimiento");
+      alert("Error de conexión al eliminar el movimiento. Por favor, intenta de nuevo.");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setApiError("");
+
+    // Validar formulario
+    if (!validateForm()) {
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -207,13 +293,30 @@ export default function MovimientosPage() {
 
       if (data.success) {
         setIsDialogOpen(false);
+        setFormData({
+          concept: "",
+          amount: "",
+          type: "INCOME",
+          date: new Date(),
+        });
+        setErrors({});
         fetchMovements();
       } else {
-        alert("Error: " + data.error.message);
+        // Manejar errores de validación del backend
+        if (data.error.details && Array.isArray(data.error.details)) {
+          const backendErrors: Record<string, string> = {};
+          data.error.details.forEach((detail: any) => {
+            if (detail.path && detail.path.length > 0) {
+              backendErrors[detail.path[0]] = detail.message;
+            }
+          });
+          setErrors(backendErrors);
+        }
+        setApiError(data.error.message || "Error al guardar el movimiento");
       }
     } catch (error) {
       console.error("Error submitting movement:", error);
-      alert("Error al guardar el movimiento");
+      setApiError("Error de conexión. Por favor, intenta de nuevo.");
     } finally {
       setSubmitting(false);
     }
@@ -267,20 +370,33 @@ export default function MovimientosPage() {
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {apiError && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{apiError}</AlertDescription>
+                    </Alert>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="concept">Concepto</Label>
                     <Input
                       id="concept"
                       placeholder="Ej: Salario mensual"
                       value={formData.concept}
-                      onChange={(e) =>
-                        setFormData({ ...formData, concept: e.target.value })
-                      }
-                      required
-                      minLength={3}
-                      maxLength={255}
-                      className="border-purple-500/20 focus:border-purple-500"
+                      onChange={(e) => {
+                        setFormData({ ...formData, concept: e.target.value });
+                        validateFieldOnChange("concept", e.target.value);
+                      }}
+                      className={`border-purple-500/20 focus:border-purple-500 ${
+                        errors.concept ? "border-red-500" : ""
+                      }`}
                     />
+                    {errors.concept && (
+                      <p className="text-sm text-red-600 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {errors.concept}
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -293,12 +409,20 @@ export default function MovimientosPage() {
                         min="0.01"
                         placeholder="0.00"
                         value={formData.amount}
-                        onChange={(e) =>
-                          setFormData({ ...formData, amount: e.target.value })
-                        }
-                        required
-                        className="border-purple-500/20 focus:border-purple-500"
+                        onChange={(e) => {
+                          setFormData({ ...formData, amount: e.target.value });
+                          validateFieldOnChange("amount", e.target.value);
+                        }}
+                        className={`border-purple-500/20 focus:border-purple-500 ${
+                          errors.amount ? "border-red-500" : ""
+                        }`}
                       />
+                      {errors.amount && (
+                        <p className="text-sm text-red-600 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {errors.amount}
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-2">
@@ -324,11 +448,20 @@ export default function MovimientosPage() {
                     <Label htmlFor="date">Fecha</Label>
                     <DatePicker
                       date={formData.date}
-                      onDateChange={(date) =>
-                        setFormData({ ...formData, date: date || new Date() })
-                      }
+                      onDateChange={(date) => {
+                        const selectedDate = date || new Date();
+                        setFormData({ ...formData, date: selectedDate });
+                        validateFieldOnChange("date", selectedDate);
+                      }}
                       placeholder="Selecciona una fecha"
+                      className={errors.date ? "border-red-500" : ""}
                     />
+                    {errors.date && (
+                      <p className="text-sm text-red-600 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {errors.date}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex gap-3 pt-4">

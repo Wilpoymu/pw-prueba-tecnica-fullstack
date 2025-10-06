@@ -149,6 +149,7 @@ async function handleGet(
     }
 
     console.error('Error listing movements:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return sendError(
       res,
       'Error al listar movimientos',
