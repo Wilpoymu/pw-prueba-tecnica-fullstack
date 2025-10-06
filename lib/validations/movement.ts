@@ -25,10 +25,6 @@ export const createMovementSchema = z.object({
     .datetime()
     .optional()
     .or(z.date().optional()),
-  notes: z
-    .string()
-    .max(1000, 'Las notas no pueden exceder 1000 caracteres')
-    .optional(),
 });
 
 /**
@@ -52,10 +48,6 @@ export const updateMovementSchema = z.object({
     .datetime()
     .optional()
     .or(z.date().optional()),
-  notes: z
-    .string()
-    .max(1000, 'Las notas no pueden exceder 1000 caracteres')
-    .optional(),
 });
 
 /**
