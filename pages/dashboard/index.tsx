@@ -18,12 +18,26 @@ import {
 import Link from 'next/link';
 import { authClient } from '@/lib/auth/client';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 const Dashboard = () => {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: sessionData, isPending } = authClient.useSession();
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+
+  // Usar useMemo para evitar recrear el objeto en cada render
+  const session = useMemo(() => {
+    if (!sessionData) return null;
+    
+    return {
+      ...sessionData,
+      user: {
+        ...sessionData.user,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        role: (sessionData.user as any).role as string | undefined,
+      },
+    };
+  }, [sessionData]);
 
   useEffect(() => {
     setIsClient(true);
