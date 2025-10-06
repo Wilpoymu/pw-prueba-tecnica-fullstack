@@ -21,16 +21,30 @@ import {
   Activity,
   Calendar,
   PiggyBank,
+  Loader2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth/client';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Permission } from '@/lib/rbac/permissions';
 import { ProtectedContent } from '@/components/auth/ProtectedContent';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 
+interface Movement {
+  id: string;
+  concept: string;
+  amount: number;
+  type: 'INCOME' | 'EXPENSE';
+  date: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Dashboard = () => {
   const { data: sessionData } = authClient.useSession();
+  const [movements, setMovements] = useState<Movement[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Usar useMemo para evitar recrear el objeto en cada render
   const session = useMemo(() => {
@@ -46,18 +60,117 @@ const Dashboard = () => {
     };
   }, [sessionData]);
 
+  // Fetch movements data
+  useEffect(() => {
+    const fetchMovements = async () => {
+      try {
+        setLoading(true);
+        const allMovements: Movement[] = [];
+        let page = 1;
+        let hasMore = true;
+
+        // Fetch all pages
+        while (hasMore) {
+          const response = await fetch(`/api/movements?page=${page}&limit=100&sortBy=date&sortOrder=desc`);
+          const data = await response.json();
+
+          if (data.success && data.data.length > 0) {
+            allMovements.push(...data.data);
+            // Check if there are more pages
+            hasMore = data.pagination && page < data.pagination.totalPages;
+            page++;
+          } else {
+            hasMore = false;
+          }
+        }
+
+        setMovements(allMovements);
+      } catch (error) {
+        console.error('Error fetching movements:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session) {
+      fetchMovements();
+    }
+  }, [session]);
+
   if (!session) return null;
 
   const isAdmin = session.user.role === 'ADMIN';
 
-  // Datos mockeados para las métricas (más adelante vendrán de la API)
-  const saldoTotal = 12345.0;
-  const ingresosDelMes = 15234.0;
-  const egresosDelMes = 2889.0;
-  const tasaAhorro = ((ingresosDelMes - egresosDelMes) / ingresosDelMes) * 100;
-  const cambioSaldo = 20.1;
-  const cambioIngresos = 12.5;
-  const cambioEgresos = 4.3;
+  // Calcular métricas reales desde los movimientos
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+  const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+  // Movimientos del mes actual
+  const currentMonthMovements = movements.filter(m => {
+    const date = new Date(m.date);
+    return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+  });
+
+  // Movimientos del mes pasado
+  const lastMonthMovements = movements.filter(m => {
+    const date = new Date(m.date);
+    return date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear;
+  });
+
+  // Calcular totales del mes actual
+  const ingresosDelMes = currentMonthMovements
+    .filter(m => m.type === 'INCOME')
+    .reduce((sum, m) => sum + Number(m.amount), 0);
+
+  const egresosDelMes = currentMonthMovements
+    .filter(m => m.type === 'EXPENSE')
+    .reduce((sum, m) => sum + Number(m.amount), 0);
+
+  // Calcular totales del mes pasado
+  const ingresosDelMesPasado = lastMonthMovements
+    .filter(m => m.type === 'INCOME')
+    .reduce((sum, m) => sum + Number(m.amount), 0);
+
+  const egresosDelMesPasado = lastMonthMovements
+    .filter(m => m.type === 'EXPENSE')
+    .reduce((sum, m) => sum + Number(m.amount), 0);
+
+  // Saldo total (todos los ingresos - todos los egresos)
+  const totalIngresos = movements
+    .filter(m => m.type === 'INCOME')
+    .reduce((sum, m) => sum + Number(m.amount), 0);
+
+  const totalEgresos = movements
+    .filter(m => m.type === 'EXPENSE')
+    .reduce((sum, m) => sum + Number(m.amount), 0);
+
+  const saldoTotal = totalIngresos - totalEgresos;
+  
+  // Balance neto de cada mes
+  const balanceMesActual = ingresosDelMes - egresosDelMes;
+  const balanceMesPasado = ingresosDelMesPasado - egresosDelMesPasado;
+
+  // Calcular cambios porcentuales
+  // Para el saldo total: comparar el balance del mes actual vs mes pasado
+  const cambioSaldo = balanceMesPasado !== 0 
+    ? ((balanceMesActual - balanceMesPasado) / Math.abs(balanceMesPasado)) * 100 
+    : (balanceMesActual > 0 ? 100 : 0);
+
+  const cambioIngresos = ingresosDelMesPasado !== 0
+    ? ((ingresosDelMes - ingresosDelMesPasado) / ingresosDelMesPasado) * 100
+    : (ingresosDelMes > 0 ? 100 : 0);
+
+  const cambioEgresos = egresosDelMesPasado !== 0
+    ? ((egresosDelMes - egresosDelMesPasado) / egresosDelMesPasado) * 100
+    : (egresosDelMes > 0 ? 100 : 0);
+
+  // Tasa de ahorro
+  const tasaAhorro = ingresosDelMes !== 0 
+    ? ((ingresosDelMes - egresosDelMes) / ingresosDelMes) * 100 
+    : 0;
 
   // Calcular estado financiero
   const getEstadoFinanciero = () => {
@@ -74,7 +187,15 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className='space-y-8'>
+      {loading ? (
+        <div className='flex items-center justify-center py-16'>
+          <div className='text-center'>
+            <Loader2 className='h-12 w-12 animate-spin text-purple-600 mx-auto mb-4' />
+            <p className='text-muted-foreground'>Cargando datos del dashboard...</p>
+          </div>
+        </div>
+      ) : (
+        <div className='space-y-8'>
         {/* Welcome Section */}
         <div className='relative'>
           <div className='absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl blur-3xl' />
@@ -129,7 +250,7 @@ const Dashboard = () => {
               </div>
               <div className='flex items-center gap-2 mt-2'>
                 <Badge variant='outline' className='text-xs border-purple-500/30 text-purple-600 dark:text-purple-400'>
-                  {cambioSaldo > 0 ? '+' : ''}{cambioSaldo}%
+                  {isFinite(cambioSaldo) ? `${cambioSaldo > 0 ? '+' : ''}${cambioSaldo.toFixed(1)}%` : 'N/A'}
                 </Badge>
                 <p className='text-xs text-muted-foreground'>
                   vs mes pasado
@@ -152,7 +273,7 @@ const Dashboard = () => {
               </div>
               <div className='flex items-center gap-2 mt-2'>
                 <Badge variant='outline' className='text-xs border-blue-500/30 text-blue-600 dark:text-blue-400'>
-                  {cambioIngresos > 0 ? '+' : ''}{cambioIngresos}%
+                  {isFinite(cambioIngresos) ? `${cambioIngresos > 0 ? '+' : ''}${cambioIngresos.toFixed(1)}%` : 'N/A'}
                 </Badge>
                 <p className='text-xs text-muted-foreground'>
                   vs mes pasado
@@ -175,7 +296,7 @@ const Dashboard = () => {
               </div>
               <div className='flex items-center gap-2 mt-2'>
                 <Badge variant='outline' className='text-xs border-pink-500/30 text-pink-600 dark:text-pink-400'>
-                  {cambioEgresos > 0 ? '+' : ''}{cambioEgresos}%
+                  {isFinite(cambioEgresos) ? `${cambioEgresos > 0 ? '+' : ''}${cambioEgresos.toFixed(1)}%` : 'N/A'}
                 </Badge>
                 <p className='text-xs text-muted-foreground'>
                   vs mes pasado
@@ -195,7 +316,7 @@ const Dashboard = () => {
               </div>
               <Badge variant='outline' className='text-xs'>
                 <Calendar className='h-3 w-3 mr-1' />
-                Octubre 2025
+                {currentDate.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' })}
               </Badge>
             </div>
           </CardHeader>
@@ -369,6 +490,7 @@ const Dashboard = () => {
           <></>
         </ProtectedContent>
       </div>
+      )}
     </DashboardLayout>
   );
 };
