@@ -9,7 +9,7 @@ import { BarChart3 } from 'lucide-react';
 import { ProtectedContent } from '@/components/auth/ProtectedContent';
 import { Permission } from '@/lib/rbac/permissions';
 
-const ReportesPage = () => {
+const ReportsPage = () => {
   return (
     <ProtectedContent permission={Permission.VIEW_REPORTS}>
       <DashboardLayout>
@@ -60,4 +60,4 @@ const ReportesPage = () => {
   );
 };
 
-export default ReportesPage;
+export default ReportsPage;
