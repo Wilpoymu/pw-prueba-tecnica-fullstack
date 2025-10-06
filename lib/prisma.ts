@@ -11,21 +11,39 @@ const globalForPrisma = global as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
 
-if (process.env.NODE_ENV === 'development') {
-  const cleanup = async () => {
-    await prisma.$disconnect();
-  };
+// Manejar la desconexión adecuadamente
+let isDisconnecting = false;
+
+const gracefulShutdown = async () => {
+  if (isDisconnecting) return;
+  isDisconnecting = true;
   
-  process.on('SIGINT', cleanup);
-  process.on('SIGTERM', cleanup);
-  process.on('beforeExit', cleanup);
+  try {
+    await prisma.$disconnect();
+    console.log('Prisma disconnected successfully');
+  } catch (error) {
+    console.error('Error disconnecting Prisma:', error);
+  } finally {
+    isDisconnecting = false;
+  }
+};
+
+if (process.env.NODE_ENV === 'development') {
+  process.on('SIGINT', gracefulShutdown);
+  process.on('SIGTERM', gracefulShutdown);
+  process.on('beforeExit', gracefulShutdown);
 }
 
 export default prisma;
