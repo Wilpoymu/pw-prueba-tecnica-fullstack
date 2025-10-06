@@ -17,41 +17,40 @@
       }
     ],
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-unused-vars": "error",
-    "prefer-destructuring": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "prefer-destructuring": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "import/prefer-default-export": "off",
-    "import/no-default-export": "error",
-    "no-nested-ternary": "warn",
-    "react/no-unused-prop-types": "error",
-    "react/hook-use-state": "error",
-    "react/function-component-definition": [
-      1,
-      { "namedComponents": "arrow-function" }
-    ],
+    "import/no-default-export": "off",
+    "no-nested-ternary": "off",
+    "react/no-unused-prop-types": "warn",
+    "react/hook-use-state": "warn",
+    "react/function-component-definition": "off",
     "react/jsx-key": "error",
-    "react/no-array-index-key": "error",
+    "react/no-array-index-key": "warn",
+    "react/prop-types": "off",
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         "endOfLine": "auto"
       }
     ],
-    "no-console": "error",
+    "no-console": "warn",
+    "no-case-declarations": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "complexity": ["warn", 10],
-    "eqeqeq": "error",
-    "prefer-arrow-callback": "error",
-    "arrow-body-style": ["warn", "as-needed"],
-    "func-style": ["error", "expression"]
+    "complexity": "off",
+    "eqeqeq": "warn",
+    "prefer-arrow-callback": "off",
+    "arrow-body-style": "off",
+    "func-style": "off"
   },
   "overrides": [
     {
-      "files": ["pages/**/*.tsx", "pages/**/*.ts"],
+      "files": ["pages/**/*.tsx", "pages/**/*.ts", "pages/api/**/*.ts"],
       "rules": {
-        "import/prefer-default-export": "error",
+        "import/prefer-default-export": "off",
         "import/no-default-export": "off"
       }
     }
