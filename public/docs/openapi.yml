@@ -18,6 +18,8 @@ servers:
 tags:
   - name: Movements
     description: Endpoints para gestión de ingresos y egresos
+  - name: Users
+    description: Endpoints para gestión de usuarios (solo administradores)
 
 security:
   - CookieAuth: []
@@ -65,3 +67,7 @@ paths:
     $ref: './movements.yml#/paths/~1api~1movements'
   /api/movements/{id}:
     $ref: './movements.yml#/paths/~1api~1movements~1{id}'
+  /api/users:
+    $ref: './users.yml#/paths/~1api~1users'
+  /api/users/{id}:
+    $ref: './users.yml#/paths/~1api~1users~1{id}'

@@ -1,0 +1,366 @@
+paths:
+  /api/users:
+    get:
+      summary: Listar usuarios
+      description: Obtiene una lista paginada de usuarios con filtros opcionales. Solo accesible para administradores.
+      operationId: listUsers
+      tags:
+        - Users
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número de página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Cantidad de usuarios por página
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: search
+          in: query
+          description: Buscar por nombre o email
+          required: false
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: Filtrar por rol
+          required: false
+          schema:
+            type: string
+            enum: [USER, ADMIN]
+        - name: sortBy
+          in: query
+          description: Campo por el cual ordenar
+          required: false
+          schema:
+            type: string
+            enum: [name, email, createdAt, updatedAt]
+            default: createdAt
+        - name: sortOrder
+          in: query
+          description: Orden de clasificación
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: Lista de usuarios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          description: Parámetros de consulta inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Sin permisos (requiere rol ADMIN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/{id}:
+    get:
+      summary: Obtener usuario por ID
+      description: Obtiene la información detallada de un usuario específico. Solo accesible para administradores.
+      operationId: getUserById
+      tags:
+        - Users
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/UserDetail'
+        '400':
+          description: ID de usuario inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Sin permisos (requiere rol ADMIN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Actualizar usuario
+      description: Actualiza el nombre, teléfono y/o rol de un usuario. Solo accesible para administradores.
+      operationId: updateUser
+      tags:
+        - Users
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID del usuario
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserInput'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Datos de usuario inválidos o ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Sin permisos (requiere rol ADMIN)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único del usuario
+          example: "user_abc123"
+        name:
+          type: string
+          description: Nombre completo del usuario
+          example: "Juan Pérez"
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario
+          example: "juan.perez@example.com"
+        phone:
+          type: string
+          nullable: true
+          description: Número de teléfono del usuario
+          example: "3103103110"
+        image:
+          type: string
+          nullable: true
+          description: URL de la imagen de perfil del usuario
+          example: "https://avatars.githubusercontent.com/u/12345"
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          description: Rol del usuario
+          example: "ADMIN"
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha de creación del usuario
+          example: "2025-10-06T08:22:46.022Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+          example: "2025-10-06T08:59:36.696Z"
+        _count:
+          type: object
+          description: Contadores relacionados
+          properties:
+            movements:
+              type: integer
+              description: Cantidad de movimientos del usuario
+              example: 5
+
+    UserDetail:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            emailVerified:
+              type: boolean
+              description: Indica si el email está verificado
+              example: true
+            _count:
+              type: object
+              description: Contadores relacionados
+              properties:
+                movements:
+                  type: integer
+                  description: Cantidad de movimientos del usuario
+                  example: 5
+                sessions:
+                  type: integer
+                  description: Cantidad de sesiones activas
+                  example: 2
+
+    UpdateUserInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Nombre completo del usuario
+          example: "Juan Carlos Pérez"
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+          description: Número de teléfono del usuario
+          example: "3103103110"
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          description: Rol del usuario
+          example: "ADMIN"
+      minProperties: 1
+      additionalProperties: false
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Página actual
+          example: 1
+        limit:
+          type: integer
+          description: Cantidad de elementos por página
+          example: 10
+        total:
+          type: integer
+          description: Total de elementos
+          example: 50
+        totalPages:
+          type: integer
+          description: Total de páginas
+          example: 5
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Mensaje de error
+              example: "Usuario no encontrado"
+            code:
+              type: string
+              description: Código de error
+              example: "NOT_FOUND"
+            details:
+              type: array
+              description: Detalles adicionales del error (opcional)
+              items:
+                type: object
