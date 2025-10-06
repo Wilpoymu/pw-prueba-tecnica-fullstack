@@ -133,8 +133,8 @@ export const Sidebar = ({ className }: SidebarProps) => {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:static inset-y-0 left-0 z-40 w-72 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-purple-200/50 dark:border-purple-900/50 transform transition-transform duration-200 ease-in-out lg:transform-none',
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
+          'fixed inset-y-0 left-0 z-40 w-72 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-purple-200/50 dark:border-purple-900/50 transform transition-transform duration-200 ease-in-out',
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
           className
         )}
       >

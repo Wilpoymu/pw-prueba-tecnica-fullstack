@@ -59,12 +59,12 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const isAdmin = session.user.role === 'ADMIN';
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20 flex'>
+    <div className='min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20'>
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
-      <div className='flex-1 flex flex-col lg:ml-0'>
+      <div className='lg:ml-72 flex flex-col min-h-screen'>
         {/* Header */}
         <header className='bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-purple-200/50 dark:border-purple-900/50 sticky top-0 z-30'>
           <div className='px-4 lg:px-8 py-4'>
