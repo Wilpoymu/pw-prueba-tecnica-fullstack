@@ -207,6 +207,22 @@ const Dashboard = () => {
               <p className='text-muted-foreground mt-2 text-lg'>
                 ¿Qué te gustaría hacer hoy?
               </p>
+              {session.user.role !== 'ADMIN' && (
+                <div className='flex items-center gap-2 mt-3'>
+                  <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20">
+                    <Users className="h-3 w-3 mr-1" />
+                    Mostrando solo tus movimientos
+                  </Badge>
+                </div>
+              )}
+              {session.user.role === 'ADMIN' && (
+                <div className='flex items-center gap-2 mt-3'>
+                  <Badge variant="outline" className="bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/20">
+                    <Users className="h-3 w-3 mr-1" />
+                    Vista de administrador - Todos los movimientos
+                  </Badge>
+                </div>
+              )}
             </div>
             <div className='glass px-6 py-4 rounded-2xl border border-purple-500/20 space-y-2'>
               <div className='flex items-center gap-2'>
