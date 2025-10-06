@@ -1,0 +1,252 @@
+components:
+  schemas:
+    Movement:
+      type: object
+      required:
+        - id
+        - concept
+        - amount
+        - type
+        - date
+        - userId
+      properties:
+        id:
+          type: string
+          format: cuid
+          description: ID único del movimiento
+          example: clxyz123abc456def789
+        concept:
+          type: string
+          minLength: 3
+          maxLength: 255
+          description: Concepto o descripción del movimiento
+          example: Salario mensual
+        amount:
+          type: number
+          format: decimal
+          minimum: 0.01
+          description: Monto del movimiento (debe ser mayor a 0)
+          example: 5000.00
+        type:
+          type: string
+          enum: [INCOME, EXPENSE]
+          description: Tipo de movimiento
+          example: INCOME
+        date:
+          type: string
+          format: date-time
+          description: Fecha del movimiento
+          example: '2025-10-06T12:00:00Z'
+        notes:
+          type: string
+          nullable: true
+          maxLength: 1000
+          description: Notas adicionales (opcional)
+          example: Pago correspondiente a septiembre
+        userId:
+          type: string
+          description: ID del usuario propietario del movimiento
+          example: user_abc123
+        user:
+          type: object
+          description: Información del usuario (incluido en algunas respuestas)
+          properties:
+            id:
+              type: string
+              example: user_abc123
+            name:
+              type: string
+              example: Juan Pérez
+            email:
+              type: string
+              format: email
+              example: juan@example.com
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha de creación del registro
+          example: '2025-10-06T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+          example: '2025-10-06T10:30:00Z'
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Fecha de eliminación lógica (soft delete)
+          example: null
+
+    CreateMovementInput:
+      type: object
+      required:
+        - concept
+        - amount
+        - type
+      properties:
+        concept:
+          type: string
+          minLength: 3
+          maxLength: 255
+          description: Concepto o descripción del movimiento
+          example: Compra de equipo
+        amount:
+          type: number
+          format: decimal
+          minimum: 0.01
+          description: Monto del movimiento (debe ser mayor a 0)
+          example: 1500.00
+        type:
+          type: string
+          enum: [INCOME, EXPENSE]
+          description: Tipo de movimiento
+          example: EXPENSE
+        date:
+          type: string
+          format: date-time
+          description: Fecha del movimiento (opcional, por defecto hoy)
+          example: '2025-10-06T15:00:00Z'
+        notes:
+          type: string
+          maxLength: 1000
+          description: Notas adicionales (opcional)
+          example: Laptop para desarrollo
+
+    UpdateMovementInput:
+      type: object
+      properties:
+        concept:
+          type: string
+          minLength: 3
+          maxLength: 255
+          description: Nuevo concepto del movimiento
+          example: Salario actualizado
+        amount:
+          type: number
+          format: decimal
+          minimum: 0.01
+          description: Nuevo monto del movimiento
+          example: 5500.00
+        type:
+          type: string
+          enum: [INCOME, EXPENSE]
+          description: Nuevo tipo de movimiento
+          example: INCOME
+        date:
+          type: string
+          format: date-time
+          description: Nueva fecha del movimiento
+          example: '2025-10-06T16:00:00Z'
+        notes:
+          type: string
+          maxLength: 1000
+          description: Nuevas notas adicionales
+          example: Incluye bono
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Página actual
+          example: 1
+        limit:
+          type: integer
+          description: Elementos por página
+          example: 50
+        total:
+          type: integer
+          description: Total de elementos
+          example: 100
+        totalPages:
+          type: integer
+          description: Total de páginas
+          example: 2
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          description: Datos de respuesta
+        message:
+          type: string
+          description: Mensaje descriptivo (opcional)
+          example: Operación exitosa
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Mensaje de error
+              example: Error al procesar la solicitud
+            code:
+              type: string
+              description: Código de error
+              example: VALIDATION_ERROR
+            details:
+              type: object
+              description: Detalles adicionales del error (opcional)
+
+  responses:
+    UnauthorizedError:
+      description: No autenticado - Token de sesión inválido o ausente
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: No autenticado
+              code: UNAUTHORIZED
+
+    ForbiddenError:
+      description: Sin permisos - El usuario no tiene permisos para esta acción
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: No tienes permisos para realizar esta acción
+              code: FORBIDDEN
+
+    NotFoundError:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: Movimiento no encontrado
+              code: NOT_FOUND
+
+    ValidationError:
+      description: Error de validación - Datos de entrada inválidos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: Error de validación
+              code: VALIDATION_ERROR
+              details:
+                concept: El concepto debe tener al menos 3 caracteres
+                amount: El monto debe ser mayor a 0

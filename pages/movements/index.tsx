@@ -2,7 +2,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 
-const Movimientos = () => {
+const MovementsPage = () => {
   return (
     <DashboardLayout>
       <div className='space-y-6'>
@@ -55,4 +55,4 @@ const Movimientos = () => {
   );
 };
 
-export default Movimientos;
+export default MovementsPage;

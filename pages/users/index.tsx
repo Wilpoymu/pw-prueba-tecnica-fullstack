@@ -9,7 +9,7 @@ import { Users } from 'lucide-react';
 import { ProtectedContent } from '@/components/auth/ProtectedContent';
 import { Permission } from '@/lib/rbac/permissions';
 
-const UsuariosPage = () => {
+const UsersPage = () => {
   return (
     <ProtectedContent permission={Permission.VIEW_USERS}>
       <DashboardLayout>
@@ -60,4 +60,4 @@ const UsuariosPage = () => {
   );
 };
 
-export default UsuariosPage;
+export default UsersPage;

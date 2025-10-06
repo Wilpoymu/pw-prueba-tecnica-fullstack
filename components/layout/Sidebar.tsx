@@ -24,22 +24,29 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
+    title: 'Dashboard',
+    href: '/dashboard',
+    icon: Sparkles,
+    permission: Permission.VIEW_DASHBOARD,
+    description: 'Visión general de la aplicación',
+  },
+  {
     title: 'Movimientos',
-    href: '/movimientos',
+    href: '/movements',
     icon: TrendingUp,
     permission: Permission.VIEW_MOVEMENTS,
     description: 'Gestión de ingresos y gastos',
   },
   {
     title: 'Usuarios',
-    href: '/usuarios',
+    href: '/users',
     icon: Users,
     permission: Permission.VIEW_USERS,
     description: 'Administración de usuarios',
   },
   {
     title: 'Reportes',
-    href: '/reportes',
+    href: '/reports',
     icon: BarChart3,
     permission: Permission.VIEW_REPORTS,
     description: 'Visualización y exportación',

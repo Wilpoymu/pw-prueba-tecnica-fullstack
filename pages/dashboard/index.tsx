@@ -251,7 +251,7 @@ const Dashboard = () => {
 
         {/* Main Navigation Cards */}
         <div className='grid gap-6 md:grid-cols-3'>
-          <Link href='/movimientos' className='group'>
+          <Link href='/movements' className='group'>
             <Card className='cursor-pointer h-full border-purple-200/50 dark:border-purple-900/50 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 hover:-translate-y-1 relative overflow-hidden'>
               <div className='absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
               <CardHeader className='relative'>
@@ -285,7 +285,7 @@ const Dashboard = () => {
           </Link>
 
           <ProtectedContent permission={Permission.VIEW_USERS}>
-            <Link href='/usuarios' className='group'>
+            <Link href='/users' className='group'>
               <Card className='cursor-pointer h-full border-blue-200/50 dark:border-blue-900/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1 relative overflow-hidden'>
                 <div className='absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
                 <CardHeader className='relative'>
@@ -318,7 +318,7 @@ const Dashboard = () => {
           </ProtectedContent>
 
           <ProtectedContent permission={Permission.VIEW_REPORTS}>
-            <Link href='/reportes' className='group'>
+            <Link href='/reports' className='group'>
               <Card className='cursor-pointer h-full border-pink-200/50 dark:border-pink-900/50 hover:border-pink-500 dark:hover:border-pink-500 transition-all duration-300 hover:shadow-xl hover:shadow-pink-500/20 hover:-translate-y-1 relative overflow-hidden'>
                 <div className='absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
                 <CardHeader className='relative'>
