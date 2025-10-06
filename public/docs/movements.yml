@@ -1,0 +1,345 @@
+paths:
+  /api/movements:
+    get:
+      tags:
+        - Movements
+      summary: Listar movimientos
+      description: |
+        Obtiene una lista paginada de movimientos con filtros opcionales. 
+        Los usuarios no-admin solo ven sus propios movimientos.
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: Número de página
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+          description: Elementos por página (máximo 100)
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [INCOME, EXPENSE]
+          description: Filtrar por tipo de movimiento
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+          description: Fecha de inicio del rango (ISO 8601)
+          example: '2025-01-01T00:00:00Z'
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
+          description: Fecha de fin del rango (ISO 8601)
+          example: '2025-12-31T23:59:59Z'
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [date, amount, concept]
+            default: date
+          description: Campo por el cual ordenar
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Orden ascendente o descendente
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Buscar en el concepto del movimiento
+          example: salario
+      responses:
+        '200':
+          description: Lista de movimientos obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: './schemas.yml#/components/schemas/Movement'
+                  pagination:
+                    $ref: './schemas.yml#/components/schemas/PaginationMeta'
+              example:
+                success: true
+                data:
+                  - id: clxyz123abc456def789
+                    concept: Salario mensual
+                    amount: 5000
+                    type: INCOME
+                    date: '2025-10-06T12:00:00Z'
+                    userId: user_abc123
+                    createdAt: '2025-10-06T10:30:00Z'
+                    updatedAt: '2025-10-06T10:30:00Z'
+                    deletedAt: null
+                    user:
+                      id: user_abc123
+                      name: Juan Pérez
+                      email: juan@example.com
+                pagination:
+                  page: 1
+                  limit: 50
+                  total: 1
+                  totalPages: 1
+        '400':
+          $ref: './schemas.yml#/components/responses/ValidationError'
+        '401':
+          $ref: './schemas.yml#/components/responses/UnauthorizedError'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: './schemas.yml#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - Movements
+      summary: Crear movimiento
+      description: |
+        Crea un nuevo movimiento financiero. 
+        Requiere permisos de administrador (CREATE_MOVEMENT).
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/components/schemas/CreateMovementInput'
+            examples:
+              ingreso:
+                summary: Ejemplo de ingreso
+                value:
+                  concept: Salario mensual
+                  amount: 5000
+                  type: INCOME
+                  date: '2025-10-06T12:00:00Z'
+              egreso:
+                summary: Ejemplo de egreso
+                value:
+                  concept: Compra de equipo
+                  amount: 1500
+                  type: EXPENSE
+      responses:
+        '200':
+          description: Movimiento creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: './schemas.yml#/components/schemas/Movement'
+              example:
+                success: true
+                data:
+                  id: clxyz789xyz123abc456
+                  concept: Salario mensual
+                  amount: 5000
+                  type: INCOME
+                  date: '2025-10-06T12:00:00Z'
+                  userId: user_abc123
+                  createdAt: '2025-10-06T11:00:00Z'
+                  updatedAt: '2025-10-06T11:00:00Z'
+                  deletedAt: null
+                  user:
+                    id: user_abc123
+                    name: Juan Pérez
+                    email: juan@example.com
+        '400':
+          $ref: './schemas.yml#/components/responses/ValidationError'
+        '401':
+          $ref: './schemas.yml#/components/responses/UnauthorizedError'
+        '403':
+          $ref: './schemas.yml#/components/responses/ForbiddenError'
+        '500':
+          description: Error interno del servidor
+
+  /api/movements/{id}:
+    get:
+      tags:
+        - Movements
+      summary: Obtener movimiento por ID
+      description: |
+        Obtiene un movimiento específico por su ID. 
+        Los usuarios no-admin solo pueden ver sus propios movimientos.
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del movimiento (formato CUID)
+          example: clxyz123abc456def789
+      responses:
+        '200':
+          description: Movimiento encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: './schemas.yml#/components/schemas/Movement'
+              example:
+                success: true
+                data:
+                  id: clxyz123abc456def789
+                  concept: Salario mensual
+                  amount: 5000
+                  type: INCOME
+                  date: '2025-10-06T12:00:00Z'
+                  userId: user_abc123
+                  createdAt: '2025-10-06T10:30:00Z'
+                  updatedAt: '2025-10-06T10:30:00Z'
+                  deletedAt: null
+                  user:
+                    id: user_abc123
+                    name: Juan Pérez
+                    email: juan@example.com
+        '401':
+          $ref: './schemas.yml#/components/responses/UnauthorizedError'
+        '404':
+          $ref: './schemas.yml#/components/responses/NotFoundError'
+        '500':
+          description: Error interno del servidor
+
+    put:
+      tags:
+        - Movements
+      summary: Actualizar movimiento
+      description: |
+        Actualiza un movimiento existente. 
+        Requiere permisos de administrador (EDIT_MOVEMENT). 
+        Todos los campos son opcionales.
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del movimiento a actualizar
+          example: clxyz123abc456def789
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yml#/components/schemas/UpdateMovementInput'
+            examples:
+              actualizarMonto:
+                summary: Actualizar solo el monto
+                value:
+                  amount: 5500
+              actualizarCompleto:
+                summary: Actualizar múltiples campos
+                value:
+                  concept: Salario mensual actualizado
+                  amount: 5500
+      responses:
+        '200':
+          description: Movimiento actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: './schemas.yml#/components/schemas/Movement'
+        '400':
+          $ref: './schemas.yml#/components/responses/ValidationError'
+        '401':
+          $ref: './schemas.yml#/components/responses/UnauthorizedError'
+        '403':
+          $ref: './schemas.yml#/components/responses/ForbiddenError'
+        '404':
+          $ref: './schemas.yml#/components/responses/NotFoundError'
+        '500':
+          description: Error interno del servidor
+
+    delete:
+      tags:
+        - Movements
+      summary: Eliminar movimiento
+      description: |
+        Elimina un movimiento (soft delete - marca como eliminado sin borrar físicamente). 
+        Requiere permisos de administrador (DELETE_MOVEMENT).
+      security:
+        - CookieAuth: []
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del movimiento a eliminar
+          example: clxyz123abc456def789
+      responses:
+        '200':
+          description: Movimiento eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Movimiento eliminado exitosamente
+                      id:
+                        type: string
+                        example: clxyz123abc456def789
+        '401':
+          $ref: './schemas.yml#/components/responses/UnauthorizedError'
+        '403':
+          $ref: './schemas.yml#/components/responses/ForbiddenError'
+        '404':
+          $ref: './schemas.yml#/components/responses/NotFoundError'
+        '500':
+          description: Error interno del servidor
