@@ -18,4 +18,15 @@ if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
 
+// En desarrollo, desconectar al recibir señales de terminación
+if (process.env.NODE_ENV === 'development') {
+  const cleanup = async () => {
+    await prisma.$disconnect();
+  };
+  
+  process.on('SIGINT', cleanup);
+  process.on('SIGTERM', cleanup);
+  process.on('beforeExit', cleanup);
+}
+
 export default prisma;
