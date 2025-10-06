@@ -45,7 +45,7 @@ const Home = () => {
             </div>
           </div>
           <span className='text-2xl font-bold text-gradient'>
-            FinanceFlow
+            Flowly
           </span>
         </Link>
         <div className='flex gap-3 items-center'>
@@ -300,9 +300,9 @@ const Home = () => {
             <div className='w-6 h-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center'>
               <Sparkles className='h-4 w-4 text-white' />
             </div>
-            <span className='font-semibold text-gradient'>FinanceFlow</span>
+            <span className='font-semibold text-gradient'>Flowly</span>
           </div>
-          <p>&copy; 2025 FinanceFlow. Sistema de Gestión Financiera.</p>
+          <p>&copy; 2025 Flowly. Sistema de Gestión Financiera.</p>
           <div className='flex gap-4 text-sm'>
             <Link href='#' className='hover:text-purple-600 dark:hover:text-purple-400 transition-colors'>
               Privacidad

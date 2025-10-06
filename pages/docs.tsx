@@ -10,7 +10,7 @@ export default function ApiDocsPage() {
       <div className="container mx-auto py-8">
         <div className="mb-6 text-center">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            FinanceFlow API Documentation
+            Flowly API Documentation
           </h1>
           <p className="mt-2 text-muted-foreground">
             Documentación completa de los endpoints REST para gestión de movimientos financieros

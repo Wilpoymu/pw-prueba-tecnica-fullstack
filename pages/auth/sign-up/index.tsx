@@ -85,7 +85,7 @@ const SignUp = () => {
             </div>
             
             <CardTitle className='text-3xl font-bold text-gradient'>
-              Únete a FinanceFlow
+              Únete a Flowly
             </CardTitle>
             <CardDescription className='text-base'>
               Crea tu cuenta y comienza a gestionar tus finanzas
@@ -162,7 +162,7 @@ const SignUp = () => {
               </div>
             </div>
             <div>
-              <h1 className='text-4xl font-bold text-gradient'>FinanceFlow</h1>
+              <h1 className='text-4xl font-bold text-gradient'>Flowly</h1>
               <p className='text-purple-600 dark:text-purple-400 font-medium'>
                 Sistema de Gestión Financiera
               </p>

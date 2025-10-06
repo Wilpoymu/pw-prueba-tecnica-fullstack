@@ -164,7 +164,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
               </div>
               <div className='flex flex-col'>
                 <span className='text-xl font-bold text-gradient'>
-                  FinanceFlow
+                  Flowly
                 </span>
                 <span className='text-xs text-purple-600 dark:text-purple-400'>
                   Sistema de Gestión
@@ -187,7 +187,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
           <div className='relative p-4 border-t border-purple-200/50 dark:border-purple-900/50'>
             <div className='px-4 py-2 text-xs text-muted-foreground'>
               <p className='font-medium text-purple-600 dark:text-purple-400'>
-                &copy; 2025 FinanceFlow
+                &copy; 2025 Flowly
               </p>
               <p className='mt-1'>Sistema de Gestión Financiera</p>
             </div>

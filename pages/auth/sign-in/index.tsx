@@ -79,7 +79,7 @@ const SignIn = () => {
               </div>
             </div>
             <div>
-              <h1 className='text-4xl font-bold text-gradient'>FinanceFlow</h1>
+              <h1 className='text-4xl font-bold text-gradient'>Flowly</h1>
               <p className='text-purple-600 dark:text-purple-400 font-medium'>
                 Sistema de Gestión Financiera
               </p>
