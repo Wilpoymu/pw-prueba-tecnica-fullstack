@@ -14,22 +14,27 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { data: sessionData, isPending } = authClient.useSession();
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (!isPending && !sessionData && isClient) {
+    if (!isPending && !sessionData && isClient && !isSigningOut) {
       router.push('/auth/sign-in');
     }
-  }, [sessionData, isPending, router, isClient]);
+  }, [sessionData, isPending, router, isClient, isSigningOut]);
 
   const handleSignOut = async () => {
+    setIsSigningOut(true);
     try {
       await authClient.signOut({
         fetchOptions: {
           onSuccess: () => {
+            router.push('/');
+          },
+          onError: () => {
             router.push('/');
           },
         },
