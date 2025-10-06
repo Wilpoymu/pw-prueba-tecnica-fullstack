@@ -77,23 +77,13 @@ async function handleGet(
     });
 
     if (!movement) {
-      return sendError(
-        res,
-        'Movimiento no encontrado',
-        'NOT_FOUND',
-        404
-      );
+      return sendError(res, 'Movimiento no encontrado', 'NOT_FOUND', 404);
     }
 
     return sendSuccess(res, movement);
   } catch (error) {
     console.error('Error getting movement:', error);
-    return sendError(
-      res,
-      'Error al obtener movimiento',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al obtener movimiento', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -118,15 +108,12 @@ async function handlePut(
     });
 
     if (!existingMovement) {
-      return sendError(
-        res,
-        'Movimiento no encontrado',
-        'NOT_FOUND',
-        404
-      );
+      return sendError(res, 'Movimiento no encontrado', 'NOT_FOUND', 404);
     }
 
-    const validatedData: UpdateMovementInput = updateMovementSchema.parse(req.body);
+    const validatedData: UpdateMovementInput = updateMovementSchema.parse(
+      req.body
+    );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = {};
 
@@ -193,7 +180,11 @@ async function handleDelete(
   id: string
 ) {
   try {
-    const session = await requirePermission(req, res, Permission.DELETE_MOVEMENT);
+    const session = await requirePermission(
+      req,
+      res,
+      Permission.DELETE_MOVEMENT
+    );
     if (!session) return;
 
     const existingMovement = await prisma.movement.findFirst({
@@ -204,12 +195,7 @@ async function handleDelete(
     });
 
     if (!existingMovement) {
-      return sendError(
-        res,
-        'Movimiento no encontrado',
-        'NOT_FOUND',
-        404
-      );
+      return sendError(res, 'Movimiento no encontrado', 'NOT_FOUND', 404);
     }
 
     const movement = await prisma.movement.update({
@@ -219,7 +205,7 @@ async function handleDelete(
       },
     });
 
-    return sendSuccess(res, { 
+    return sendSuccess(res, {
       message: 'Movimiento eliminado exitosamente',
       id: movement.id,
     });

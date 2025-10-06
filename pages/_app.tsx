@@ -11,7 +11,7 @@ const poppins = Poppins({
 });
 
 const App = ({ Component, pageProps }: AppProps) => (
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+  <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
     <div className={`${poppins.variable} font-sans`}>
       <Component {...pageProps} />
     </div>

@@ -4,8 +4,8 @@ import { PrismaClient } from '@prisma/client';
 // exhausting your database connection limit.
 // Learn more: https://pris.ly/d/help/next-js-best-practices
 
-const globalForPrisma = global as unknown as { 
-  prisma: PrismaClient | undefined 
+const globalForPrisma = global as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
 export const prisma =
@@ -29,7 +29,7 @@ let isDisconnecting = false;
 const gracefulShutdown = async () => {
   if (isDisconnecting) return;
   isDisconnecting = true;
-  
+
   try {
     await prisma.$disconnect();
     console.log('Prisma disconnected successfully');

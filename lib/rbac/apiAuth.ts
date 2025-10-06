@@ -15,7 +15,6 @@ type ApiHandler = (
   res: NextApiResponse
 ) => Promise<void> | void;
 
-
 export const withAuth = (handler: ApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -39,7 +38,6 @@ export const withAuth = (handler: ApiHandler) => {
     }
   };
 };
-
 
 export const withPermission = (permission: Permission, handler: ApiHandler) => {
   return withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {

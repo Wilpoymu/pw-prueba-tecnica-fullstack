@@ -1,7 +1,4 @@
-import {
-  listUsersQuerySchema,
-  updateUserSchema,
-} from '@/lib/validations/user';
+import { listUsersQuerySchema, updateUserSchema } from '@/lib/validations/user';
 import { ZodError } from 'zod';
 
 describe('User Validation Schemas', () => {

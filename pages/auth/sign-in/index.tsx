@@ -61,9 +61,12 @@ const SignIn = () => {
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20 p-4 relative overflow-hidden'>
       {/* Animated background elements */}
       <div className='absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-float' />
-      <div className='absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float' style={{ animationDelay: '1s' }} />
+      <div
+        className='absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float'
+        style={{ animationDelay: '1s' }}
+      />
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-full blur-3xl' />
-      
+
       <div className='absolute top-4 right-4 z-10'>
         <ThemeToggle />
       </div>
@@ -131,7 +134,7 @@ const SignIn = () => {
         {/* Right side - Sign In Card */}
         <Card className='w-full border-purple-200/50 dark:border-purple-900/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl relative overflow-hidden shadow-2xl'>
           <div className='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none' />
-          
+
           <CardHeader className='space-y-1 text-center relative pb-8'>
             {/* Mobile logo */}
             <div className='lg:hidden flex justify-center mb-4'>
@@ -142,7 +145,7 @@ const SignIn = () => {
                 </div>
               </div>
             </div>
-            
+
             <CardTitle className='text-3xl font-bold text-gradient'>
               Bienvenido de vuelta
             </CardTitle>

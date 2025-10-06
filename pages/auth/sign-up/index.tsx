@@ -7,7 +7,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { authClient } from '@/lib/auth/client';
-import { Github, Sparkles, ArrowRight, Shield, Users, BarChart3 } from 'lucide-react';
+import {
+  Github,
+  Sparkles,
+  ArrowRight,
+  Shield,
+  Users,
+  BarChart3,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -61,9 +68,12 @@ const SignUp = () => {
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20 p-4 relative overflow-hidden'>
       {/* Animated background elements */}
       <div className='absolute top-20 right-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-float' />
-      <div className='absolute bottom-20 left-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float' style={{ animationDelay: '1s' }} />
+      <div
+        className='absolute bottom-20 left-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float'
+        style={{ animationDelay: '1s' }}
+      />
       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl' />
-      
+
       <div className='absolute top-4 right-4 z-10'>
         <ThemeToggle />
       </div>
@@ -72,7 +82,7 @@ const SignUp = () => {
         {/* Left side - Sign Up Card */}
         <Card className='w-full border-purple-200/50 dark:border-purple-900/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl relative overflow-hidden shadow-2xl lg:order-1'>
           <div className='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none' />
-          
+
           <CardHeader className='space-y-1 text-center relative pb-8'>
             {/* Mobile logo */}
             <div className='lg:hidden flex justify-center mb-4'>
@@ -83,7 +93,7 @@ const SignUp = () => {
                 </div>
               </div>
             </div>
-            
+
             <CardTitle className='text-3xl font-bold text-gradient'>
               Únete a Flowly
             </CardTitle>
@@ -102,15 +112,21 @@ const SignUp = () => {
               </div>
               <ul className='space-y-2 text-sm text-muted-foreground'>
                 <li className='flex items-center gap-2'>
-                  <span className='text-purple-600 dark:text-purple-400 font-bold'>✓</span>
+                  <span className='text-purple-600 dark:text-purple-400 font-bold'>
+                    ✓
+                  </span>
                   <span>Acceso completo de Administrador</span>
                 </li>
                 <li className='flex items-center gap-2'>
-                  <span className='text-purple-600 dark:text-purple-400 font-bold'>✓</span>
+                  <span className='text-purple-600 dark:text-purple-400 font-bold'>
+                    ✓
+                  </span>
                   <span>Gestión ilimitada de movimientos</span>
                 </li>
                 <li className='flex items-center gap-2'>
-                  <span className='text-purple-600 dark:text-purple-400 font-bold'>✓</span>
+                  <span className='text-purple-600 dark:text-purple-400 font-bold'>
+                    ✓
+                  </span>
                   <span>Reportes y gráficos en tiempo real</span>
                 </li>
               </ul>

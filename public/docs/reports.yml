@@ -17,7 +17,7 @@ paths:
           schema:
             type: string
             format: date-time
-            example: "2025-01-01T00:00:00.000Z"
+            example: '2025-01-01T00:00:00.000Z'
         - name: endDate
           in: query
           description: Fecha de fin del rango (ISO 8601)
@@ -25,7 +25,7 @@ paths:
           schema:
             type: string
             format: date-time
-            example: "2025-12-31T23:59:59.999Z"
+            example: '2025-12-31T23:59:59.999Z'
         - name: type
           in: query
           description: Filtrar por tipo de movimiento
@@ -97,7 +97,7 @@ paths:
           schema:
             type: string
             format: date-time
-            example: "2025-01-01T00:00:00.000Z"
+            example: '2025-01-01T00:00:00.000Z'
         - name: endDate
           in: query
           description: Fecha de fin del rango (ISO 8601)
@@ -105,7 +105,7 @@ paths:
           schema:
             type: string
             format: date-time
-            example: "2025-12-31T23:59:59.999Z"
+            example: '2025-12-31T23:59:59.999Z'
         - name: type
           in: query
           description: Filtrar por tipo de movimiento
@@ -206,12 +206,12 @@ components:
               type: string
               format: date-time
               nullable: true
-              example: "2025-01-01T00:00:00.000Z"
+              example: '2025-01-01T00:00:00.000Z'
             end:
               type: string
               format: date-time
               nullable: true
-              example: "2025-12-31T23:59:59.999Z"
+              example: '2025-12-31T23:59:59.999Z'
 
     GroupedMovement:
       type: object
@@ -219,7 +219,7 @@ components:
         period:
           type: string
           description: Período de agrupación (formato depende del groupBy)
-          example: "2025-01"
+          example: '2025-01'
         income:
           type: number
           description: Total de ingresos en el período
@@ -249,11 +249,11 @@ components:
             message:
               type: string
               description: Mensaje de error
-              example: "Parámetros de consulta inválidos"
+              example: 'Parámetros de consulta inválidos'
             code:
               type: string
               description: Código de error
-              example: "VALIDATION_ERROR"
+              example: 'VALIDATION_ERROR'
             details:
               type: array
               description: Detalles adicionales del error (opcional)

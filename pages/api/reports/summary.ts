@@ -131,12 +131,7 @@ export default async function handler(
     }
 
     console.error('Error generating summary report:', error);
-    return sendError(
-      res,
-      'Error al generar el reporte',
-      'INTERNAL_ERROR',
-      500
-    );
+    return sendError(res, 'Error al generar el reporte', 'INTERNAL_ERROR', 500);
   }
 }
 
@@ -157,7 +152,7 @@ function groupMovementsByPeriod(
 
   movements.forEach((movement) => {
     const period = getPeriodKey(new Date(movement.date), groupBy);
-    
+
     if (!groups.has(period)) {
       groups.set(period, {
         period,
@@ -181,7 +176,7 @@ function groupMovementsByPeriod(
     group.count += 1;
   });
 
-  return Array.from(groups.values()).sort((a, b) => 
+  return Array.from(groups.values()).sort((a, b) =>
     a.period.localeCompare(b.period)
   );
 }
@@ -189,7 +184,10 @@ function groupMovementsByPeriod(
 /**
  * Get period key based on grouping type
  */
-function getPeriodKey(date: Date, groupBy: 'day' | 'week' | 'month' | 'year'): string {
+function getPeriodKey(
+  date: Date,
+  groupBy: 'day' | 'week' | 'month' | 'year'
+): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -197,17 +195,17 @@ function getPeriodKey(date: Date, groupBy: 'day' | 'week' | 'month' | 'year'): s
   switch (groupBy) {
     case 'day':
       return `${year}-${month}-${day}`;
-    
+
     case 'week':
       const weekNumber = getWeekNumber(date);
       return `${year}-W${String(weekNumber).padStart(2, '0')}`;
-    
+
     case 'month':
       return `${year}-${month}`;
-    
+
     case 'year':
       return `${year}`;
-    
+
     default:
       return `${year}-${month}`;
   }
@@ -217,9 +215,11 @@ function getPeriodKey(date: Date, groupBy: 'day' | 'week' | 'month' | 'year'): s
  * Get ISO week number
  */
 function getWeekNumber(date: Date): number {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const d = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }

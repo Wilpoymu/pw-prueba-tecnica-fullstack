@@ -30,7 +30,9 @@ describe('Movement Validations', () => {
       const result = createMovementSchema.safeParse(invalidMovement);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toContain('al menos 3 caracteres');
+        expect(result.error.issues[0].message).toContain(
+          'al menos 3 caracteres'
+        );
       }
     });
 
@@ -63,7 +65,7 @@ describe('Movement Validations', () => {
   describe('updateMovementSchema', () => {
     it('debería permitir actualizaciones parciales', () => {
       const partialUpdate = {
-        amount: 6000, 
+        amount: 6000,
       };
 
       const result = updateMovementSchema.safeParse(partialUpdate);
@@ -83,7 +85,7 @@ describe('Movement Validations', () => {
   describe('listMovementsQuerySchema', () => {
     it('debería aplicar valores por defecto', () => {
       const result = listMovementsQuerySchema.parse({});
-      
+
       expect(result.page).toBe(1);
       expect(result.limit).toBe(50);
       expect(result.sortBy).toBe('date');
@@ -95,7 +97,7 @@ describe('Movement Validations', () => {
         page: '2',
         limit: '25',
       });
-      
+
       expect(result.page).toBe(2);
       expect(result.limit).toBe(25);
     });
@@ -104,7 +106,7 @@ describe('Movement Validations', () => {
       const result = listMovementsQuerySchema.safeParse({
         limit: '500',
       });
-      
+
       expect(result.success).toBe(false);
     });
 
@@ -113,7 +115,7 @@ describe('Movement Validations', () => {
         type: 'INCOME',
         search: 'salario',
       });
-      
+
       expect(result.type).toBe('INCOME');
       expect(result.search).toBe('salario');
     });

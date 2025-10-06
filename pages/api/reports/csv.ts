@@ -35,7 +35,11 @@ export default async function handler(
   }
 
   try {
-    const session = await requirePermission(req, res, Permission.EXPORT_REPORTS);
+    const session = await requirePermission(
+      req,
+      res,
+      Permission.EXPORT_REPORTS
+    );
     if (!session) return;
 
     const queryParams = {
@@ -46,7 +50,8 @@ export default async function handler(
       sortOrder: parseQueryParam(req.query.sortOrder),
     };
 
-    const validatedQuery: CsvExportQuery = csvExportQuerySchema.parse(queryParams);
+    const validatedQuery: CsvExportQuery =
+      csvExportQuerySchema.parse(queryParams);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
@@ -68,9 +73,10 @@ export default async function handler(
     }
 
     const orderBy: any = {};
-    orderBy[validatedQuery.sortBy || 'date'] = validatedQuery.sortOrder || 'desc';
+    orderBy[validatedQuery.sortBy || 'date'] =
+      validatedQuery.sortOrder || 'desc';
 
-    const movements: MovementForCsv[] = await prisma.movement.findMany({
+    const movements: MovementForCsv[] = (await prisma.movement.findMany({
       where,
       select: {
         id: true,
@@ -87,14 +93,14 @@ export default async function handler(
         },
       },
       orderBy,
-    }) as any;
+    })) as any;
 
     const csv = generateCsv(movements);
 
     const filename = `movimientos_${new Date().toISOString().split('T')[0]}.csv`;
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    
+
     res.write('\uFEFF');
     res.write(csv);
     res.end();
@@ -164,7 +170,11 @@ function escapeCSV(field: string | number): string {
 
   const stringField = String(field);
 
-  if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+  if (
+    stringField.includes(',') ||
+    stringField.includes('"') ||
+    stringField.includes('\n')
+  ) {
     return `"${stringField.replace(/"/g, '""')}"`;
   }
 

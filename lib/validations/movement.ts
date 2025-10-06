@@ -20,11 +20,7 @@ export const createMovementSchema = z.object({
     .positive('El monto debe ser mayor a 0')
     .max(999999999999, 'El monto es demasiado grande'),
   type: MovementTypeEnum,
-  date: z
-    .string()
-    .datetime()
-    .optional()
-    .or(z.date().optional()),
+  date: z.string().datetime().optional().or(z.date().optional()),
 });
 
 /**
@@ -43,11 +39,7 @@ export const updateMovementSchema = z.object({
     .max(999999999999, 'El monto es demasiado grande')
     .optional(),
   type: MovementTypeEnum.optional(),
-  date: z
-    .string()
-    .datetime()
-    .optional()
-    .or(z.date().optional()),
+  date: z.string().datetime().optional().or(z.date().optional()),
 });
 
 /**

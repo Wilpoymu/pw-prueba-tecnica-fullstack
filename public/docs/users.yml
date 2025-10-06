@@ -233,41 +233,41 @@ components:
         id:
           type: string
           description: ID único del usuario
-          example: "user_abc123"
+          example: 'user_abc123'
         name:
           type: string
           description: Nombre completo del usuario
-          example: "Juan Pérez"
+          example: 'Juan Pérez'
         email:
           type: string
           format: email
           description: Correo electrónico del usuario
-          example: "juan.perez@example.com"
+          example: 'juan.perez@example.com'
         phone:
           type: string
           nullable: true
           description: Número de teléfono del usuario
-          example: "3103103110"
+          example: '3103103110'
         image:
           type: string
           nullable: true
           description: URL de la imagen de perfil del usuario
-          example: "https://avatars.githubusercontent.com/u/12345"
+          example: 'https://avatars.githubusercontent.com/u/12345'
         role:
           type: string
           enum: [USER, ADMIN]
           description: Rol del usuario
-          example: "ADMIN"
+          example: 'ADMIN'
         createdAt:
           type: string
           format: date-time
           description: Fecha de creación del usuario
-          example: "2025-10-06T08:22:46.022Z"
+          example: '2025-10-06T08:22:46.022Z'
         updatedAt:
           type: string
           format: date-time
           description: Fecha de última actualización
-          example: "2025-10-06T08:59:36.696Z"
+          example: '2025-10-06T08:59:36.696Z'
         _count:
           type: object
           description: Contadores relacionados
@@ -307,18 +307,18 @@ components:
           minLength: 1
           maxLength: 255
           description: Nombre completo del usuario
-          example: "Juan Carlos Pérez"
+          example: 'Juan Carlos Pérez'
         phone:
           type: string
           minLength: 1
           maxLength: 20
           description: Número de teléfono del usuario
-          example: "3103103110"
+          example: '3103103110'
         role:
           type: string
           enum: [USER, ADMIN]
           description: Rol del usuario
-          example: "ADMIN"
+          example: 'ADMIN'
       minProperties: 1
       additionalProperties: false
 
@@ -354,11 +354,11 @@ components:
             message:
               type: string
               description: Mensaje de error
-              example: "Usuario no encontrado"
+              example: 'Usuario no encontrado'
             code:
               type: string
               description: Código de error
-              example: "NOT_FOUND"
+              example: 'NOT_FOUND'
             details:
               type: array
               description: Detalles adicionales del error (opcional)

@@ -94,9 +94,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                   </div>
                 </div>
                 <ThemeToggle />
-                <Button 
-                  variant='ghost' 
-                  size='icon' 
+                <Button
+                  variant='ghost'
+                  size='icon'
                   onClick={handleSignOut}
                   className='hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400'
                 >
