@@ -11,6 +11,7 @@ import { Github } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const SignIn = () => {
   const { data: session, isPending } = authClient.useSession();
@@ -36,7 +37,11 @@ const SignIn = () => {
   };
 
   if (!isClient) {
-    return null;
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800'>
+        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-600'></div>
+      </div>
+    );
   }
 
   if (isPending) {
@@ -54,6 +59,9 @@ const SignIn = () => {
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4'>
+      <div className='absolute top-4 right-4'>
+        <ThemeToggle />
+      </div>
       <Card className='w-full max-w-md'>
         <CardHeader className='space-y-1 text-center'>
           <CardTitle className='text-2xl font-bold'>Inicia sesión</CardTitle>

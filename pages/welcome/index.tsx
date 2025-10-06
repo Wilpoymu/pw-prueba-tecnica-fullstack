@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { authClient } from '@/lib/auth/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Welcome = () => {
   const { data: session, isPending } = authClient.useSession();
@@ -34,7 +35,11 @@ const Welcome = () => {
   }, [session, isPending, router, isClient]);
 
   if (!isClient) {
-    return null;
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900'>
+        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-600'></div>
+      </div>
+    );
   }
 
   if (isPending) {
@@ -52,6 +57,9 @@ const Welcome = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900'>
+      <div className='absolute top-4 right-4'>
+        <ThemeToggle />
+      </div>
       <div className='container mx-auto px-4 py-20'>
         <div className='max-w-4xl mx-auto space-y-12'>
           {/* Welcome Header */}
