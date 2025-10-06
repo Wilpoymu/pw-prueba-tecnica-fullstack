@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
 import { ZodError } from 'zod';
 import {
   sendSuccess,
@@ -17,8 +16,7 @@ import {
   CreateMovementInput,
 } from '@/lib/validations/movement';
 import { Permission } from '@/lib/rbac/permissions';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 /**
  * GET /api/movements - List movements
@@ -185,7 +183,6 @@ async function handlePost(
         amount: amountDecimal,
         type: validatedData.type,
         date: validatedData.date ? new Date(validatedData.date) : new Date(),
-        notes: validatedData.notes || null,
         userId: session.user.id,
       },
       include: {

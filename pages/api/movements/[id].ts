@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
 import { ZodError } from 'zod';
 import {
   sendSuccess,
@@ -14,8 +13,7 @@ import {
   UpdateMovementInput,
 } from '@/lib/validations/movement';
 import { Permission } from '@/lib/rbac/permissions';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 /**
  * GET /api/movements/[id] - Get a single movement
@@ -153,10 +151,6 @@ async function handlePut(
 
     if (validatedData.date !== undefined) {
       updateData.date = new Date(validatedData.date);
-    }
-
-    if (validatedData.notes !== undefined) {
-      updateData.notes = validatedData.notes;
     }
 
     // Update movement
