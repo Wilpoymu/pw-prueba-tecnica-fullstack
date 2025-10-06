@@ -2,7 +2,9 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DIRECT_URL,
+});
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -14,6 +16,14 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: 'string',
+        required: true,
+        defaultValue: 'ADMIN',
+        returned: true,
+      },
+    },
+  },
 });
-
-export type Session = typeof auth.$Infer.Session;
