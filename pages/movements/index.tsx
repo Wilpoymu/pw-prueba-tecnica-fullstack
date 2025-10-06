@@ -103,7 +103,7 @@ export default function MovimientosPage() {
         page: "1",
         limit: "100",
         sortBy: "date",
-        sortOrder: "asc",
+        sortOrder: "desc",
       });
 
       if (typeFilter !== "ALL") {
