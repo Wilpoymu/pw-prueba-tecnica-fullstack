@@ -4,6 +4,8 @@ export enum Role {
 }
 
 export enum Permission {
+  // Dashboard
+  VIEW_DASHBOARD = 'view_dashboard',
   // Movimientos
   VIEW_MOVEMENTS = 'view_movements',
   CREATE_MOVEMENT = 'create_movement',
@@ -20,10 +22,12 @@ export enum Permission {
   EXPORT_REPORTS = 'export_reports',
 }
 
-// Definir qué permisos tiene cada rol
+
 export const rolePermissions: Record<Role, Permission[]> = {
-  [Role.USER]: [Permission.VIEW_MOVEMENTS],
+  [Role.USER]: [Permission.VIEW_DASHBOARD, Permission.VIEW_MOVEMENTS],
   [Role.ADMIN]: [
+    // Dashboard
+    Permission.VIEW_DASHBOARD,
     // Movimientos
     Permission.VIEW_MOVEMENTS,
     Permission.CREATE_MOVEMENT,
@@ -39,7 +43,6 @@ export const rolePermissions: Record<Role, Permission[]> = {
   ],
 };
 
-// Función para verificar si un rol tiene un permiso
 export const hasPermission = (
   role: Role | undefined,
   permission: Permission
@@ -48,7 +51,6 @@ export const hasPermission = (
   return rolePermissions[role]?.includes(permission) ?? false;
 };
 
-// Función para verificar si un rol tiene alguno de los permisos
 export const hasAnyPermission = (
   role: Role | undefined,
   permissions: Permission[]
@@ -59,7 +61,6 @@ export const hasAnyPermission = (
   );
 };
 
-// Función para verificar si un rol tiene todos los permisos
 export const hasAllPermissions = (
   role: Role | undefined,
   permissions: Permission[]
