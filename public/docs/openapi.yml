@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: FinanceFlow API
+  version: 1.0.0
+  description: |
+    API REST para gestión de ingresos y egresos financieros. 
+    Permite a los usuarios administrar sus movimientos financieros con autenticación y control de permisos basado en roles.
+  contact:
+    name: FinanceFlow Support
+    email: support@financeflow.com
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor de desarrollo
+  - url: https://api.financeflow.com
+    description: Servidor de producción
+
+tags:
+  - name: Movements
+    description: Endpoints para gestión de ingresos y egresos
+
+security:
+  - CookieAuth: []
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Autenticación mediante Better-Auth session token
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: better-auth.session_token
+      description: Session cookie de Better-Auth
+
+  schemas:
+    Movement:
+      $ref: './schemas.yml#/components/schemas/Movement'
+    CreateMovementInput:
+      $ref: './schemas.yml#/components/schemas/CreateMovementInput'
+    UpdateMovementInput:
+      $ref: './schemas.yml#/components/schemas/UpdateMovementInput'
+    PaginationMeta:
+      $ref: './schemas.yml#/components/schemas/PaginationMeta'
+    SuccessResponse:
+      $ref: './schemas.yml#/components/schemas/SuccessResponse'
+    ErrorResponse:
+      $ref: './schemas.yml#/components/schemas/ErrorResponse'
+
+  responses:
+    UnauthorizedError:
+      $ref: './schemas.yml#/components/responses/UnauthorizedError'
+    ForbiddenError:
+      $ref: './schemas.yml#/components/responses/ForbiddenError'
+    NotFoundError:
+      $ref: './schemas.yml#/components/responses/NotFoundError'
+    ValidationError:
+      $ref: './schemas.yml#/components/responses/ValidationError'
+
+paths:
+  /api/movements:
+    $ref: './movements.yml#/paths/~1api~1movements'
+  /api/movements/{id}:
+    $ref: './movements.yml#/paths/~1api~1movements~1{id}'
